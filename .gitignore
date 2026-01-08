@@ -1,0 +1,54 @@
+# Python
+# Virtual environment
+.venv/
+env/
+venv/
+ENV/
+
+# Byte-code files
+*.pyc
+__pycache__/
+
+# Distribution / packaging
+.Python
+build/
+dist/
+wheels/
+*.egg-info/
+htmlcov/
+.tox/
+
+# IDE-specific files (optional, depends on your team's IDEs)
+.idea/  # JetBrains IDEs (PyCharm, WebStorm, etc)
+.vscode/ # VS Code (often only config files are ignored, check project needs)
+
+# Miscellaneous
+*.log
+npm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+pdm-debug.log*
+
+# React / TypeScript / Node
+# Dependencies
+node_modules/
+
+# Build artifacts
+build/
+dist/
+out/
+
+# TypeScript
+*.js.map
+*.d.ts
+
+# OS-specific files
+.DS_Store # macOS
+Thumbs.db # Windows
+
+# Lock files (recommended to keep in version control, but listed here if you choose to ignore)
+# package-lock.json
+# yarn.lock
+# Pipfile.lock
+# poetry.lock
+# uv.lock
