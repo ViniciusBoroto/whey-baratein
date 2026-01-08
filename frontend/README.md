@@ -1,75 +1,91 @@
-# React + TypeScript + Vite
+# Whey Protein Ranking Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, beautiful React TypeScript frontend for ranking and comparing whey protein supplements.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🥛 **Product Catalog**: View all whey protein products with detailed information
+- 💰 **EAA/Price Ranking**: Compare products by Essential Amino Acids per price ratio
+- 💪 **Protein Concentration Ranking**: Compare products by protein concentration percentage
+- 📱 **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+- ⚡ **Fast & Modern**: Built with Vite, React 19, and TypeScript
+- 🎨 **Beautiful UI**: Styled with Tailwind CSS
 
-## React Compiler
+## Architecture
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+This project follows SOLID principles:
 
-Note: This will impact Vite dev & build performances.
+- **Single Responsibility**: Each component has one clear purpose
+- **Open/Closed**: Components are extensible without modification
+- **Liskov Substitution**: Proper interface contracts
+- **Interface Segregation**: Focused interfaces
+- **Dependency Inversion**: Services are injected as dependencies
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── components/          # Reusable UI components
+│   ├── Card.tsx        # Generic card component
+│   ├── Dashboard.tsx   # Main dashboard orchestrator
+│   ├── LoadingSpinner.tsx
+│   ├── RankingCard.tsx
+│   ├── TabNavigation.tsx
+│   └── WheyProteinCard.tsx
+├── hooks/              # Custom React hooks
+│   └── useWheyProtein.ts
+├── services/           # API services and repositories
+│   └── whey-protein.service.ts
+├── types/              # TypeScript type definitions
+│   └── whey-protein.ts
+├── utils/              # Utility functions
+│   └── formatters.ts
+├── App.tsx
+├── main.tsx
+└── index.css
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Setup
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
 ```
+
+2. Start the development server:
+```bash
+npm run dev
+```
+
+3. Make sure your backend API is running on `http://localhost:8000`
+
+## API Integration
+
+The frontend connects to the FastAPI backend with the following endpoints:
+
+- `GET /whey-proteins/` - Get all products
+- `GET /whey-proteins/{id}` - Get specific product
+- `POST /whey-proteins/` - Create new product
+- `PUT /whey-proteins/{id}` - Update product
+- `DELETE /whey-proteins/{id}` - Delete product
+- `GET /whey-proteins/rankings/eea-price` - Get EAA/price ranking
+- `GET /whey-proteins/rankings/protein-concentration` - Get protein concentration ranking
+
+## Technologies Used
+
+- **React 19** - UI library
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Vite** - Build tool
+- **Fetch API** - HTTP client
+
+## Contributing
+
+1. Follow the existing code structure and SOLID principles
+2. Add proper TypeScript types for new features
+3. Ensure components are reusable and focused
+4. Test your changes thoroughly
