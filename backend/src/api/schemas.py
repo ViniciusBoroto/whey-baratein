@@ -1,10 +1,21 @@
 from pydantic import BaseModel, field_validator
 from typing import Optional
 
+class BrandCreate(BaseModel):
+    name: str
+    logo_url: Optional[str] = None
+    description: Optional[str] = None
+
+class BrandResponse(BrandCreate):
+    id: int
+    
+    class Config:
+        from_attributes = True
+
 class WheyProteinCreate(BaseModel):
     name: str
     price: float
-    brand: str
+    brand_id: Optional[int] = None
     serving_size: int
     total_weight: int
     protein_per_serving: int
@@ -43,6 +54,7 @@ class WheyProteinCreate(BaseModel):
 
 class WheyProteinResponse(WheyProteinCreate):
     id: int
+    brand: Optional[BrandResponse] = None
     eea_per_serving: float
     servings_per_packet: float
     total_eea_per_packet: float

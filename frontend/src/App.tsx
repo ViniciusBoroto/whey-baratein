@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import { BrandSelector } from "./components/BrandSelector";
 
 interface WheyProtein {
   id: number;
   name: string;
-  brand: string;
+  brand?: { name: string; id: number; logo_url?: string };
+  brand_id?: number;
   price: number;
   serving_size: number;
   total_weight: number;
   protein_per_serving: number;
+  reliability: number;
+  image_url?: string;
   fenilanina: number;
   histidina: number;
   isoleucina: number;
@@ -28,10 +32,12 @@ interface WheyProtein {
 interface WheyProteinCreate {
   name: string;
   price: number;
-  brand: string;
+  brand_id?: number;
   serving_size: number;
   total_weight: number;
   protein_per_serving: number;
+  reliability?: number;
+  image_url?: string;
   fenilanina?: number;
   histidina?: number;
   isoleucina?: number;
@@ -67,7 +73,7 @@ function App() {
   const [formData, setFormData] = useState<WheyProteinCreate>({
     name: "",
     price: 0,
-    brand: "",
+    brand_id: undefined,
     serving_size: 0,
     total_weight: 0,
     protein_per_serving: 0,
@@ -84,24 +90,31 @@ function App() {
     valina: 0,
   });
 
-  const theme = darkMode ? "dark" : "";
-
   const checkEaaUnits = (data: WheyProteinCreate) => {
     const eeaValues = [
-      data.fenilanina, data.histidina, data.isoleucina, data.leucina,
-      data.lisina, data.metionina, data.treonina, data.triptofano, data.valina
-    ].filter(v => v && v > 0);
-    
+      data.fenilanina,
+      data.histidina,
+      data.isoleucina,
+      data.leucina,
+      data.lisina,
+      data.metionina,
+      data.treonina,
+      data.triptofano,
+      data.valina,
+    ].filter((v) => v && v > 0);
+
     if (eeaValues.length === 0 || data.serving_size === 0) {
       setUnitWarning(null);
       return;
     }
-    
-    const totalEaa = eeaValues.reduce((sum, val) => sum + val, 0);
-    const avgEaa = totalEaa / eeaValues.length;
-    
+
+    const totalEaa = eeaValues.reduce((sum, val) => (sum || 0) + (val || 0), 0) || 0;
+    const avgEaa = eeaValues.length > 0 ? totalEaa / eeaValues.length : 0;
+
     if (avgEaa > data.serving_size * 10) {
-      setUnitWarning('Os valores de aminoácidos parecem estar em mg. O sistema converterá automaticamente para gramas.');
+      setUnitWarning(
+        "Os valores de aminoácidos parecem estar em mg. O sistema converterá automaticamente para gramas."
+      );
     } else {
       setUnitWarning(null);
     }
@@ -165,7 +178,7 @@ function App() {
     setFormData({
       name: protein.name,
       price: protein.price,
-      brand: protein.brand,
+      brand_id: protein.brand_id,
       serving_size: protein.serving_size,
       total_weight: protein.total_weight,
       protein_per_serving: protein.protein_per_serving,
@@ -189,7 +202,7 @@ function App() {
     setFormData({
       name: "",
       price: 0,
-      brand: "",
+      brand_id: undefined,
       serving_size: 0,
       total_weight: 0,
       protein_per_serving: 0,
@@ -319,13 +332,15 @@ function App() {
                 )}
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex-1">
-                    <h3 className="text-sm font-semibold truncate">{protein.name}</h3>
+                    <h3 className="text-sm font-semibold truncate">
+                      {protein.name}
+                    </h3>
                     <p
                       className={`text-xs ${
                         darkMode ? "text-gray-400" : "text-gray-600"
                       }`}
                     >
-                      {protein.brand}
+                      {protein.brand?.name || "Sem marca"}
                     </p>
                   </div>
                   <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full ml-2">
@@ -339,7 +354,9 @@ function App() {
                       <svg
                         key={i}
                         className={`w-3 h-3 ${
-                          i < protein.reliability ? "text-yellow-400" : "text-gray-300"
+                          i < protein.reliability
+                            ? "text-yellow-400"
+                            : "text-gray-300"
                         }`}
                         fill="currentColor"
                         viewBox="0 0 20 20"
@@ -348,7 +365,9 @@ function App() {
                       </svg>
                     ))}
                   </div>
-                  <span className="text-xs text-gray-500">({protein.reliability}/5)</span>
+                  <span className="text-xs text-gray-500">
+                    ({protein.reliability}/5)
+                  </span>
                 </div>
 
                 <div className="space-y-1 mb-3 text-xs">
@@ -559,25 +578,12 @@ function App() {
                   />
                 </div>
                 <div>
-                  <label
-                    className={`block text-sm font-medium mb-1 ${
-                      darkMode ? "text-gray-300" : "text-gray-700"
-                    }`}
-                  >
-                    Marca *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.brand}
-                    onChange={(e) =>
-                      setFormData({ ...formData, brand: e.target.value })
+                  <BrandSelector
+                    selectedBrandId={formData.brand_id}
+                    onBrandSelect={(brandId) =>
+                      setFormData({ ...formData, brand_id: brandId })
                     }
-                    className={`w-full p-3 border rounded-lg ${
-                      darkMode
-                        ? "bg-gray-700 border-gray-600 text-white"
-                        : "bg-white border-gray-300"
-                    }`}
-                    required
+                    darkMode={darkMode}
                   />
                 </div>
                 <div>
@@ -710,7 +716,9 @@ function App() {
                         <svg
                           key={i}
                           className={`w-4 h-4 ${
-                            i < formData.reliability ? "text-yellow-400" : "text-gray-300"
+                            i < (formData.reliability || 0)
+                              ? "text-yellow-400"
+                              : "text-gray-300"
                           }`}
                           fill="currentColor"
                           viewBox="0 0 20 20"
@@ -718,12 +726,14 @@ function App() {
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
                       ))}
-                      <span className="text-sm ml-2">({formData.reliability}/5)</span>
+                      <span className="text-sm ml-2">
+                        ({formData.reliability || 0}/5)
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <label
                   className={`block text-sm font-medium mb-1 ${
