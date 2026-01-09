@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrandSelector } from "./components/BrandSelector";
+import { StarSlider } from "./components/StarSlider";
 
 interface WheyProtein {
   id: number;
@@ -313,47 +314,45 @@ function App() {
 
         {/* Content */}
         {activeTab === "products" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
             {proteins.map((protein) => (
               <div
                 key={protein.id}
-                className={`rounded-lg shadow-md p-4 ${
+                className={`rounded-lg shadow-sm p-3 ${
                   darkMode
                     ? "bg-gray-800 border-gray-700"
                     : "bg-white border-gray-200"
-                } border`}
+                } border hover:shadow-md transition-shadow`}
               >
                 {protein.image_url && (
                   <img
                     src={protein.image_url}
                     alt={protein.name}
-                    className="w-full h-32 object-cover rounded-lg mb-3"
+                    className="w-full h-20 object-cover rounded mb-2"
                   />
                 )}
-                <div className="flex justify-between items-start mb-2">
-                  <div className="flex-1">
-                    <h3 className="text-sm font-semibold truncate">
-                      {protein.name}
-                    </h3>
-                    <p
-                      className={`text-xs ${
-                        darkMode ? "text-gray-400" : "text-gray-600"
-                      }`}
-                    >
-                      {protein.brand?.name || "Sem marca"}
-                    </p>
-                  </div>
-                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full ml-2">
-                    R$ {protein.price.toFixed(0)}
-                  </span>
+                <div className="mb-2">
+                  <h3 className="text-xs font-semibold truncate">
+                    {protein.name}
+                  </h3>
+                  <p
+                    className={`text-xs ${
+                      darkMode ? "text-gray-400" : "text-gray-600"
+                    }`}
+                  >
+                    {protein.brand?.name || "Sem marca"}
+                  </p>
                 </div>
 
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
+                    R$ {protein.price.toFixed(0)}
+                  </span>
                   <div className="flex items-center space-x-1">
                     {Array.from({ length: 5 }, (_, i) => (
                       <svg
                         key={i}
-                        className={`w-3 h-3 ${
+                        className={`w-2 h-2 ${
                           i < protein.reliability
                             ? "text-yellow-400"
                             : "text-gray-300"
@@ -365,12 +364,9 @@ function App() {
                       </svg>
                     ))}
                   </div>
-                  <span className="text-xs text-gray-500">
-                    ({protein.reliability}/5)
-                  </span>
                 </div>
 
-                <div className="space-y-1 mb-3 text-xs">
+                <div className="space-y-1 mb-2 text-xs">
                   <div className="flex justify-between">
                     <span
                       className={`${
@@ -395,30 +391,18 @@ function App() {
                       {protein.protein_concentration.toFixed(1)}%
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span
-                      className={`${
-                        darkMode ? "text-gray-400" : "text-gray-600"
-                      }`}
-                    >
-                      Preço/EAA:
-                    </span>
-                    <span className="font-medium text-green-600">
-                      {protein.eea_price.toFixed(2)}
-                    </span>
-                  </div>
                 </div>
 
                 <div className="flex space-x-1">
                   <button
                     onClick={() => handleEdit(protein)}
-                    className="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white py-1 px-2 rounded text-xs"
+                    className="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white py-1 px-1 rounded text-xs"
                   >
                     Editar
                   </button>
                   <button
                     onClick={() => handleDelete(protein.id)}
-                    className="flex-1 bg-red-600 hover:bg-red-700 text-white py-1 px-2 rounded text-xs"
+                    className="flex-1 bg-red-600 hover:bg-red-700 text-white py-1 px-1 rounded text-xs"
                   >
                     Excluir
                   </button>
@@ -690,47 +674,11 @@ function App() {
                   />
                 </div>
                 <div>
-                  <label
-                    className={`block text-sm font-medium mb-1 ${
-                      darkMode ? "text-gray-300" : "text-gray-700"
-                    }`}
-                  >
-                    Confiabilidade (0-5 estrelas)
-                  </label>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="range"
-                      min="0"
-                      max="5"
-                      value={formData.reliability}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          reliability: Number(e.target.value),
-                        })
-                      }
-                      className="flex-1"
-                    />
-                    <div className="flex items-center space-x-1">
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <svg
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < (formData.reliability || 0)
-                              ? "text-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                      <span className="text-sm ml-2">
-                        ({formData.reliability || 0}/5)
-                      </span>
-                    </div>
-                  </div>
+                  <StarSlider
+                    value={formData.reliability || 0}
+                    onChange={(value) => setFormData({ ...formData, reliability: value })}
+                    darkMode={darkMode}
+                  />
                 </div>
               </div>
 
