@@ -12,8 +12,8 @@ export const RankingCard: React.FC<RankingCardProps> = ({ ranking, type }) => {
   const isEeaPrice = type === 'eea-price';
   const primaryValue = isEeaPrice ? ranking.eea_price.toFixed(2) : formatPercentage(ranking.protein_concentration);
   const secondaryValue = isEeaPrice ? formatPercentage(ranking.protein_concentration) : ranking.eea_price.toFixed(2);
-  const primaryLabel = isEeaPrice ? 'EAA/Preço' : 'Concentração';
-  const secondaryLabel = isEeaPrice ? 'Concentração' : 'EAA/Preço';
+  const primaryLabel = isEeaPrice ? 'Preço/EAA' : 'Concentração';
+  const secondaryLabel = isEeaPrice ? 'Concentração' : 'Preço/EAA';
 
   return (
     <Card>

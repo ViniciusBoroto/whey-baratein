@@ -9,7 +9,13 @@ from ..api import crud, schemas
 router = APIRouter(prefix="/whey-proteins", tags=["whey-proteins"])
 
 def db_to_domain(db_whey_protein: WheyProteinDB) -> WheyProtein:
-    return WheyProtein(**{k: v for k, v in db_whey_protein.__dict__.items() if not k.startswith('_')})
+    data = {k: v for k, v in db_whey_protein.__dict__.items() if not k.startswith('_')}
+    # Handle None values for new fields
+    if data.get('reliability') is None:
+        data['reliability'] = 0
+    if data.get('image_url') is None:
+        data['image_url'] = None
+    return WheyProtein(**data)
 
 @router.post("/", response_model=schemas.WheyProteinResponse)
 def create_whey_protein(whey_protein: schemas.WheyProteinCreate, db: Session = Depends(get_db)):
@@ -94,7 +100,7 @@ def get_eea_price_ranking(db: Session = Depends(get_db)):
             "protein_concentration": domain_wp.protein_concentration()
         })
     
-    rankings.sort(key=lambda x: x["eea_price"], reverse=True)
+    rankings.sort(key=lambda x: x["eea_price"])
     
     for i, ranking in enumerate(rankings):
         ranking["rank"] = i + 1

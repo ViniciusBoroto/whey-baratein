@@ -54,7 +54,7 @@ def test_read_whey_protein(client):
         "serving_size": 30,
         "total_weight": 900,
         "protein_per_serving": 25,
-        "leucina": 2500
+        "leucina": 2500  # This will be converted from mg to g (2.5)
     }
     
     create_response = client.post("/whey-proteins/", json=whey_data)
@@ -64,7 +64,7 @@ def test_read_whey_protein(client):
     assert response.status_code == 200
     data = response.json()
     assert data["name"] == "Test Whey"
-    assert data["eea_per_serving"] == 2500
+    assert data["eea_per_serving"] == 2.5  # Converted from 2500mg to 2.5g
     assert data["servings_per_packet"] == 30.0
 
 def test_read_whey_proteins(client):
