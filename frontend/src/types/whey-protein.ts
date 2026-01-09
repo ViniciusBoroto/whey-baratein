@@ -2,7 +2,8 @@ export interface WheyProtein {
   id: number;
   name: string;
   price: number;
-  brand: string;
+  brand?: Brand;
+  brand_id?: number;
   serving_size: number;
   total_weight: number;
   protein_per_serving: number;
@@ -27,7 +28,7 @@ export interface WheyProtein {
 export interface WheyProteinCreate {
   name: string;
   price: number;
-  brand: string;
+  brand_id?: number;
   serving_size: number;
   total_weight: number;
   protein_per_serving: number;
@@ -53,7 +54,7 @@ export interface WheyProteinRanking {
   rank: number;
 }
 
-export type RankingType = 'eea-price' | 'protein-concentration';
+export type RankingType = "eea-price" | "protein-concentration";
 export interface Brand {
   id: number;
   name: string;

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from .database.database import create_tables
-from .api.routes import router
+from .api.routes import router, brand_router
 
 app = FastAPI(title="Whey Protein API", version="1.0.0")
 
@@ -9,6 +9,7 @@ def startup_event():
     create_tables()
 
 app.include_router(router)
+app.include_router(brand_router)
 
 @app.get("/")
 def read_root():
