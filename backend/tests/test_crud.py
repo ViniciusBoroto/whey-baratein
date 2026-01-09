@@ -28,7 +28,7 @@ def test_create_whey_protein(db_session):
         serving_size=30,
         total_weight=900,
         protein_per_serving=25,
-        leucina=2500
+        leucina=2500  # This will be converted from mg to g (2.5)
     )
     
     created_whey = create_whey_protein(db_session, whey_data)
@@ -36,7 +36,7 @@ def test_create_whey_protein(db_session):
     assert created_whey.id is not None
     assert created_whey.name == "Test Whey"
     assert created_whey.price == 100.0
-    assert created_whey.leucina == 2500
+    assert created_whey.leucina == 2.5  # Converted from 2500mg to 2.5g
 
 def test_get_whey_protein(db_session):
     whey_data = WheyProteinCreate(
@@ -102,7 +102,7 @@ def test_update_whey_protein(db_session):
         serving_size=30,
         total_weight=900,
         protein_per_serving=25,
-        leucina=3000
+        leucina=3000  # This will be converted from mg to g (3.0)
     )
     
     updated_whey = update_whey_protein(db_session, created_whey.id, updated_data)
@@ -110,7 +110,7 @@ def test_update_whey_protein(db_session):
     assert updated_whey.name == "Updated Whey"
     assert updated_whey.price == 120.0
     assert updated_whey.brand == "Updated Brand"
-    assert updated_whey.leucina == 3000
+    assert updated_whey.leucina == 3.0  # Converted from 3000mg to 3.0g
 
 def test_delete_whey_protein(db_session):
     whey_data = WheyProteinCreate(

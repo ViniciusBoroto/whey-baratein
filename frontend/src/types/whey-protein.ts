@@ -6,6 +6,8 @@ export interface WheyProtein {
   serving_size: number;
   total_weight: number;
   protein_per_serving: number;
+  reliability: number;
+  image_url?: string;
   fenilanina: number;
   histidina: number;
   isoleucina: number;
@@ -29,6 +31,8 @@ export interface WheyProteinCreate {
   serving_size: number;
   total_weight: number;
   protein_per_serving: number;
+  reliability?: number;
+  image_url?: string;
   fenilanina?: number;
   histidina?: number;
   isoleucina?: number;
@@ -50,3 +54,15 @@ export interface WheyProteinRanking {
 }
 
 export type RankingType = 'eea-price' | 'protein-concentration';
+export interface Brand {
+  id: number;
+  name: string;
+  logo_url?: string;
+  description?: string;
+}
+
+export interface BrandCreate {
+  name: string;
+  logo_url?: string;
+  description?: string;
+}

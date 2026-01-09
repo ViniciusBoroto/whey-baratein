@@ -13,6 +13,8 @@ class WheyProteinDB(Base):
     serving_size = Column(Integer)
     total_weight = Column(Integer)
     protein_per_serving = Column(Integer)
+    reliability = Column(Integer, default=0)
+    image_url = Column(String, nullable=True)
     fenilanina = Column(Float, default=0.0)
     histidina = Column(Float, default=0.0)
     isoleucina = Column(Float, default=0.0)
@@ -22,3 +24,12 @@ class WheyProteinDB(Base):
     treonina = Column(Float, default=0.0)
     triptofano = Column(Float, default=0.0)
     valina = Column(Float, default=0.0)
+
+
+class BrandDB(Base):
+    __tablename__ = "brands"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    logo_url = Column(String, nullable=True)
+    description = Column(String, nullable=True)
