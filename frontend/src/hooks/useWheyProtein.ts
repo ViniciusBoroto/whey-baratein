@@ -1,6 +1,10 @@
-import { useState, useEffect } from 'react';
-import { WheyProtein, WheyProteinRanking, RankingType } from '../types/whey-protein';
-import { WheyProteinRepository } from '../services/whey-protein.service';
+import { useState, useEffect } from "react";
+import type {
+  WheyProtein,
+  WheyProteinRanking,
+  RankingType,
+} from "../types/whey-protein";
+import type { WheyProteinRepository } from "../services/whey-protein.service";
 
 interface UseAsyncState<T> {
   data: T | null;
@@ -8,7 +12,9 @@ interface UseAsyncState<T> {
   error: string | null;
 }
 
-export function useWheyProteins(repository: WheyProteinRepository): UseAsyncState<WheyProtein[]> {
+export function useWheyProteins(
+  repository: WheyProteinRepository
+): UseAsyncState<WheyProtein[]> {
   const [state, setState] = useState<UseAsyncState<WheyProtein[]>>({
     data: null,
     loading: true,
@@ -18,11 +24,15 @@ export function useWheyProteins(repository: WheyProteinRepository): UseAsyncStat
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setState(prev => ({ ...prev, loading: true, error: null }));
+        setState((prev) => ({ ...prev, loading: true, error: null }));
         const data = await repository.getAll();
         setState({ data, loading: false, error: null });
       } catch (error) {
-        setState({ data: null, loading: false, error: error instanceof Error ? error.message : 'Unknown error' });
+        setState({
+          data: null,
+          loading: false,
+          error: error instanceof Error ? error.message : "Unknown error",
+        });
       }
     };
 
@@ -45,11 +55,15 @@ export function useWheyProteinRanking(
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setState(prev => ({ ...prev, loading: true, error: null }));
+        setState((prev) => ({ ...prev, loading: true, error: null }));
         const data = await repository.getRanking(type);
         setState({ data, loading: false, error: null });
       } catch (error) {
-        setState({ data: null, loading: false, error: error instanceof Error ? error.message : 'Unknown error' });
+        setState({
+          data: null,
+          loading: false,
+          error: error instanceof Error ? error.message : "Unknown error",
+        });
       }
     };
 

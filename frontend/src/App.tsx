@@ -109,7 +109,8 @@ function App() {
       return;
     }
 
-    const totalEaa = eeaValues.reduce((sum, val) => (sum || 0) + (val || 0), 0) || 0;
+    const totalEaa =
+      eeaValues.reduce((sum, val) => (sum || 0) + (val || 0), 0) || 0;
     const avgEaa = eeaValues.length > 0 ? totalEaa / eeaValues.length : 0;
 
     if (avgEaa > data.serving_size * 10) {
@@ -676,7 +677,9 @@ function App() {
                 <div>
                   <StarSlider
                     value={formData.reliability || 0}
-                    onChange={(value) => setFormData({ ...formData, reliability: value })}
+                    onChange={(value) =>
+                      setFormData({ ...formData, reliability: value })
+                    }
                     darkMode={darkMode}
                   />
                 </div>
