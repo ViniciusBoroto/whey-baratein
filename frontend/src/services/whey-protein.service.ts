@@ -1,4 +1,9 @@
-import { WheyProtein, WheyProteinCreate, WheyProteinRanking, RankingType } from '../types/whey-protein';
+import type {
+  WheyProtein,
+  WheyProteinCreate,
+  WheyProteinRanking,
+  RankingType,
+} from "../types/whey-protein";
 
 export interface ApiClient {
   get<T>(url: string): Promise<T>;
@@ -19,7 +24,7 @@ export interface WheyProteinRepository {
 class HttpClient implements ApiClient {
   private baseURL: string;
 
-  constructor(baseURL: string = 'http://localhost:8000') {
+  constructor(baseURL: string = "http://localhost:8000") {
     this.baseURL = baseURL;
   }
 
@@ -31,8 +36,8 @@ class HttpClient implements ApiClient {
 
   async post<T>(url: string, data: unknown): Promise<T> {
     const response = await fetch(`${this.baseURL}${url}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -41,8 +46,8 @@ class HttpClient implements ApiClient {
 
   async put<T>(url: string, data: unknown): Promise<T> {
     const response = await fetch(`${this.baseURL}${url}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -51,7 +56,7 @@ class HttpClient implements ApiClient {
 
   async delete(url: string): Promise<void> {
     const response = await fetch(`${this.baseURL}${url}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -61,7 +66,7 @@ export class WheyProteinService implements WheyProteinRepository {
   constructor(private apiClient: ApiClient) {}
 
   async getAll(): Promise<WheyProtein[]> {
-    return this.apiClient.get<WheyProtein[]>('/whey-proteins/');
+    return this.apiClient.get<WheyProtein[]>("/whey-proteins/");
   }
 
   async getById(id: number): Promise<WheyProtein> {
@@ -69,7 +74,7 @@ export class WheyProteinService implements WheyProteinRepository {
   }
 
   async create(data: WheyProteinCreate): Promise<WheyProtein> {
-    return this.apiClient.post<WheyProtein>('/whey-proteins/', data);
+    return this.apiClient.post<WheyProtein>("/whey-proteins/", data);
   }
 
   async update(id: number, data: WheyProteinCreate): Promise<WheyProtein> {
@@ -81,7 +86,9 @@ export class WheyProteinService implements WheyProteinRepository {
   }
 
   async getRanking(type: RankingType): Promise<WheyProteinRanking[]> {
-    return this.apiClient.get<WheyProteinRanking[]>(`/whey-proteins/rankings/${type}`);
+    return this.apiClient.get<WheyProteinRanking[]>(
+      `/whey-proteins/rankings/${type}`
+    );
   }
 }
 
