@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrandSelector } from "./components/BrandSelector";
 import { StarSlider } from "./components/StarSlider";
+import { wheyProteinService } from "./services/whey-protein.service";
 
 interface WheyProtein {
   id: number;
@@ -128,15 +129,15 @@ function App() {
 
   const loadData = async () => {
     try {
-      const [proteinsRes, eeaRes, concRes] = await Promise.all([
-        fetch("/whey-proteins/"),
-        fetch("/whey-proteins/rankings/eea-price"),
-        fetch("/whey-proteins/rankings/protein-concentration"),
+      const [proteins, eeaRanking, concRanking] = await Promise.all([
+        wheyProteinService.getAll(),
+        wheyProteinService.getRanking("eea-price"),
+        wheyProteinService.getRanking("protein-concentration"),
       ]);
 
-      setProteins(await proteinsRes.json());
-      setEeaRanking(await eeaRes.json());
-      setConcentrationRanking(await concRes.json());
+      setProteins(proteins);
+      setEeaRanking(eeaRanking);
+      setConcentrationRanking(concRanking);
     } catch (error) {
       console.error("Error loading data:", error);
     } finally {
@@ -147,14 +148,11 @@ function App() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const url = editingId ? `/whey-proteins/${editingId}` : "/whey-proteins/";
-      const method = editingId ? "PUT" : "POST";
-
-      await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      if (editingId) {
+        await wheyProteinService.update(editingId, formData);
+      } else {
+        await wheyProteinService.create(formData);
+      }
 
       setShowForm(false);
       setEditingId(null);
@@ -168,7 +166,7 @@ function App() {
   const handleDelete = async (id: number) => {
     if (confirm("Tem certeza que deseja excluir?")) {
       try {
-        await fetch(`/whey-proteins/${id}`, { method: "DELETE" });
+        await wheyProteinService.delete(id);
         loadData();
       } catch (error) {
         console.error("Error deleting:", error);
