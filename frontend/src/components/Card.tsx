@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface CardProps {
   children: React.ReactNode;
@@ -6,11 +6,15 @@ interface CardProps {
   onClick?: () => void;
 }
 
-export const Card: React.FC<CardProps> = ({ children, className = '', onClick }) => {
+export const Card: React.FC<CardProps> = ({
+  children,
+  className = "",
+  onClick,
+}) => {
   return (
     <div
       className={`bg-white rounded-lg shadow-md border border-gray-200 p-6 transition-all duration-200 hover:shadow-lg ${
-        onClick ? 'cursor-pointer hover:scale-105' : ''
+        onClick ? "cursor-pointer hover:scale-105" : ""
       } ${className}`}
       onClick={onClick}
     >
@@ -25,7 +29,11 @@ interface CardHeaderProps {
   badge?: React.ReactNode;
 }
 
-export const CardHeader: React.FC<CardHeaderProps> = ({ title, subtitle, badge }) => {
+export const CardHeader: React.FC<CardHeaderProps> = ({
+  title,
+  subtitle,
+  badge,
+}) => {
   return (
     <div className="flex justify-between items-start mb-4">
       <div>
