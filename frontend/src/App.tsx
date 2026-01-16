@@ -1,6 +1,7 @@
 import "./App.css";
 import { DarkModeButton } from "./components/DarkModeButton";
 import logo from "./../public/whey-baratein.png";
+import { WheyCard } from "./components/WheyCard";
 
 function App() {
   return (
@@ -24,44 +25,11 @@ function App() {
         </div>
       </header>
       <main className="p-10">
-        <div className="grid grid-cols-3 gap-7">
-          <div className="flex justify-between align-middle h-80 w-full bg-surface-alt shadow-xl drop-shadow-brand rounded-2xl overflow-hidden">
-            <img
-              src="https://placehold.co/500x600"
-              className="w-2/5 h-full object-cover drop-shadow-xl drop-shadow-border"
-              alt=""
-            />
-            <div className="w-full h-full bg-surface-alt p-6 flex flex-col justify-between">
-              <div>
-                <h2 className="text-3xl ">Whey 100% 3W Hidrolisado</h2>
-                <div className="flex items-center">
-                  <img
-                    src="https://placehold.co/50x50"
-                    className="inline rounded-full w-10 mr-2 my-2 drop-shadow-md drop-shadow-border"
-                    alt=""
-                  />
-                  <span className="text-md">Marca</span>
-                </div>
-              </div>
-              <div>
-                <p>
-                  Preço por EAA:{" "}
-                  <span className="bg-surface font-extrabold text-heading text-shadow-2xs text-shadow-default inline-block shadow-md shadow-border border border-border p-2 rounded-full">
-                    R$ 0,53
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p>
-                  Preço: <span className="font-bold">R$ 90,00</span>
-                  <br />
-                  Concentração: <span className="font-bold">00%</span>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="h-80 w-full bg-surface-alt"></div>
-          <div className="h-80 w-full bg-surface-alt"></div>
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-7">
+          <WheyCard />
+          <WheyCard />
+          <WheyCard />
+          <WheyCard />
         </div>
       </main>
       <footer>Footer</footer>
