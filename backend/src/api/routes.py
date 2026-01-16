@@ -66,7 +66,8 @@ def read_whey_proteins(skip: int = 0, limit: int = 100, db: Session = Depends(ge
     for wp in whey_proteins:
         domain_wp = db_to_domain(wp)
         result.append(schemas.WheyProteinResponse(
-            **domain_wp.__dict__,
+            **wp.__dict__,
+            brand=schemas.BrandResponse(**domain_wp.brand.__dict__, id=wp.brand_rel.id) if domain_wp.brand else None,
             eea_per_serving=domain_wp.eea_per_serving(),
             servings_per_packet=domain_wp.servings_per_packet(),
             total_eea_per_packet=domain_wp.total_eea_per_packet(),
