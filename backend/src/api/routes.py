@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+
+from src.domain.models.brand import Brand
 from ..database.database import get_db
 from ..database.models import WheyProteinDB, BrandDB
 from ..domain.models.whey_protein import WheyProtein
@@ -17,7 +19,7 @@ def db_to_domain(db_whey_protein: WheyProteinDB) -> WheyProtein:
         data['image_url'] = None
     # Convert brand relationship to string for domain model
     if db_whey_protein.brand_rel:
-        data['brand'] = db_whey_protein.brand_rel.name
+        data['brand'] = Brand(**db_whey_protein.brand_rel.__dict__)
     else:
         data['brand'] = 'Unknown'
     # Remove brand_id and brand_rel from data
@@ -64,7 +66,7 @@ def read_whey_proteins(skip: int = 0, limit: int = 100, db: Session = Depends(ge
     for wp in whey_proteins:
         domain_wp = db_to_domain(wp)
         result.append(schemas.WheyProteinResponse(
-            **wp.__dict__,
+            **domain_wp.__dict__,
             eea_per_serving=domain_wp.eea_per_serving(),
             servings_per_packet=domain_wp.servings_per_packet(),
             total_eea_per_packet=domain_wp.total_eea_per_packet(),

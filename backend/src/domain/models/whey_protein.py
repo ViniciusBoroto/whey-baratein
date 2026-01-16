@@ -1,11 +1,13 @@
 from pydantic import BaseModel, field_validator
 from typing import Dict, Any, Optional
 
+from src.domain.models.brand import Brand
+
 
 class WheyProtein(BaseModel):
     name: str
     price: float
-    brand: str
+    brand: Brand
     serving_size: int
     total_weight: int
     protein_per_serving: int
