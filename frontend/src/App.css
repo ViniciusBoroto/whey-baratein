@@ -7,8 +7,10 @@
     /* BACKGROUNDS */
     /* Main background (White) */
     --bg-main: #ffffff;
+
+    --bg-strong: #ffffff;
     /* Secondary background (Gray-50 - used for sidebars/cards) */
-    --bg-alt: #f9fafb;
+    --bg-alt: #f8f8f8;
 
     /* TEXT */
     /* Main Headings (Gray-900) */
@@ -18,7 +20,8 @@
 
     /* BORDERS */
     /* Default Border (Gray-200) */
-    --border-main: #e5e7eb;
+    --border-main: #d1d5db;
+    --border-light: #ededee;
 
     /* PRIMARY BRAND COLOR (Flowbite Blue) */
     /* Primary Button Background (Blue-700) */
@@ -34,11 +37,11 @@
 
     /* BACKGROUNDS */
     /* Main background (Gray-900) */
-    --bg-main: #111827;
+    --bg-main: #0a0d14;
 
     --bg-strong: #0e131f;
     /* Secondary background (Gray-800) */
-    --bg-alt: #1f2937;
+    --bg-alt: #131e2c;
 
     /* TEXT */
     /* Main Headings (White) */
@@ -48,7 +51,9 @@
 
     /* BORDERS */
     /* Default Border (Gray-700) */
-    --border-main: #374151;
+    /* --border-main: #374151; */
+    --border-main: rgb(35, 43, 62);
+    --border-light: rgb(40, 47, 62);
 
     /* PRIMARY BRAND COLOR */
     /* Primary Button Background (Blue-600 - slightly lighter for dark mode) */
@@ -73,6 +78,10 @@
 
   /* Borders */
   --color-border: var(--border-main);
+  --color-border-light: var(--border-light);
+
+  /* Custom border widths */
+  --border-width-thick: 5px;
 
   /* Primary Brand */
   --color-brand: var(--primary-bg);
