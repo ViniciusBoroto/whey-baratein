@@ -1,5 +1,7 @@
 import { Modal } from "./Modal";
 import { Input } from "./Input";
+import { useMemo, useState } from "react";
+import type { Brand } from "../types/whey-protein";
 
 export interface CreateModalFormProps {
   isOpen: boolean;
@@ -10,6 +12,22 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
   isOpen,
   onClose,
 }) => {
+  const [brandQuery, setBrandQuery] = useState("");
+  const brands: Brand[] = [
+    { id: 1, name: "Optimum Nutrition" },
+    { id: 2, name: "Gold Standard" },
+  ];
+  const filteredBrands = useMemo(() => {
+    if (!brandQuery) return [];
+    return brands.filter((item) =>
+      item.name.toLowerCase().includes(brandQuery.toLowerCase()),
+    );
+  }, [brandQuery, brands]);
+
+  const handleBrandInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBrandQuery(e.target.value);
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Adicionar Whey Protein">
       <form action="#" className="grid grid-cols-2 gap-x-4">
@@ -21,6 +39,33 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
           wrapperClassName="col-span-2"
           required
         />
+        <div className="flex flex-col col-span-2 gap-0">
+          <Input
+            label="Marca"
+            id="brand"
+            type="text"
+            value={brandQuery}
+            onChange={handleBrandInputChange}
+            placeholder="Marca do whey"
+            wrapperClassName="col-span-2"
+            required
+          />
+          {brandQuery && (
+            <ul className="col-span-2 p-0 m-0 mb-5 -mt-4.5 rounded-b-base border-x border-b border-border">
+              {filteredBrands.map((brand) => (
+                <li
+                  className="border border-border-light p-3 bg-surface-alt hover:bg-surface border-b-border"
+                  key={brand.id}
+                >
+                  {brand.name}
+                </li>
+              ))}
+              <li className="border text-brand border-border-light p-3 bg-surface-alt hover:bg-surface rounded-b-base">
+                + Adicionar Marca
+              </li>
+            </ul>
+          )}
+        </div>
         <Input
           label="Preço (R$/pacote)"
           id="price"
