@@ -2,11 +2,19 @@ import "./App.css";
 import { DarkModeButton } from "./components/DarkModeButton";
 import logo from "./../public/whey-baratein.png";
 import { HomePage } from "./pages/HomePage";
+import { PrimaryButton } from "./components/PrimaryButton";
+import { useState } from "react";
+import { CreateWheyProteinModal } from "./components/CreateWheyProteinModal";
 
 function App() {
+  const [isCreating, setIsCreating] = useState(false);
   return (
     <>
-      <header className="sticky top-0 z-40 flex-none w-full mx-auto bg-neutral-primary border-b border-border-light">
+      <CreateWheyProteinModal
+        isOpen={isCreating}
+        onClose={() => setIsCreating(false)}
+      ></CreateWheyProteinModal>
+      <header className="sticky top-0 z-40 flex-none w-full mx-auto bg-neutral-primary border-b border-border-medium">
         {/* Top Bar */}
         <div className="flex items-center justify-between w-full px-3 py-3 mx-auto bg-surface">
           {/* Left part of top bar */}
@@ -19,8 +27,11 @@ function App() {
               />
             </a>
           </div>
-          <div className="h-auto">
+          <div className="h-auto flex items-center gap-3">
             <DarkModeButton></DarkModeButton>
+            <PrimaryButton onClick={() => setIsCreating(true)}>
+              + Adicionar
+            </PrimaryButton>
           </div>
         </div>
       </header>
