@@ -31,6 +31,10 @@
     --primary-hov: #1e429f;
     /* Primary Text (Blue-600) */
     --primary-txt: #1c64f2;
+
+    --primary-bg-light: #5996f8;
+    --primary-hov-light: #2563eb;
+    --primary-txt-light: #3b82f6;
   }
 
   .dark {
@@ -63,6 +67,9 @@
     --primary-hov: #1d4ed8;
     /* Primary Text (Blue-500) */
     --primary-txt: #3b82f6;
+    --primary-bg-light: #5996f8;
+    --primary-hov-light: #2563eb;
+    --primary-txt-light: #3b82f6;
   }
 }
 
@@ -89,6 +96,9 @@
   --color-brand: var(--primary-bg);
   --color-brand-hover: var(--primary-hov);
   --color-brand-text: var(--primary-txt);
+  --color-brand-light: var(--primary-bg-light);
+  --color-brand-light-hover: var(--primary-hov-light);
+  --color-brand-light-text: var(--primary-txt-light);
 
   /* Keep standard border radius */
   --radius-base: 0.75rem; /* Flowbite uses slightly rounder 8px usually */

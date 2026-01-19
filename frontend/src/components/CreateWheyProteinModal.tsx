@@ -16,6 +16,8 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
   const brands: Brand[] = [
     { id: 1, name: "Optimum Nutrition" },
     { id: 2, name: "Gold Standard" },
+    { id: 3, name: "Gold Standard 3" },
+    { id: 4, name: "Gold Standard 4" },
   ];
   const filteredBrands = useMemo(() => {
     if (!brandQuery) return [];
@@ -39,9 +41,13 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
           wrapperClassName="col-span-2"
           required
         />
-        <div className="flex flex-col col-span-2 gap-0">
+
+        <fieldset className="my-2 px-4 grid grid-cols-2 gap-x-2 border border-border-medium col-span-2 rounded-md">
+          <legend className="grid grid-cols-2mb-2 p-3 text-sm font-semibold text-heading">
+            Marca
+          </legend>
           <Input
-            label="Marca"
+            label=""
             id="brand"
             type="text"
             value={brandQuery}
@@ -51,21 +57,26 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             required
           />
           {brandQuery && (
-            <ul className="col-span-2 p-0 m-0 mb-5 -mt-4.5 rounded-b-base border-x border-b border-border">
+            <ul className="col-span-2 p-0 m-0 mb-5 -mt-3 rounded-base border-border">
               {filteredBrands.map((brand) => (
                 <li
-                  className="border border-border-light p-3 bg-surface-alt hover:bg-surface border-b-border"
+                  className="group flex items-center border border-border-light p-3 bg-surface-alt hover:bg-surface border-b-border hover:border-x-brand-light light hover:border-y-0 hover:border-x  "
                   key={brand.id}
                 >
+                  <img
+                    src="https://placehold.co/50x50"
+                    alt="Logo da marca"
+                    className="rounded-full w-8 my-1 mr-3 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-brand shadow-border transition duration-300 ease-in-out"
+                  />
                   {brand.name}
                 </li>
               ))}
-              <li className="border text-brand border-border-light p-3 bg-surface-alt hover:bg-surface rounded-b-base">
+              <li className="cursor-pointer text-brand border-b border-x border-brand-light p-3 hover:bg-brand-light hover:text-white  rounded-b-base">
                 + Adicionar Marca
               </li>
             </ul>
           )}
-        </div>
+        </fieldset>
         <Input
           label="Preço (R$/pacote)"
           id="price"
@@ -81,7 +92,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
           required
         />
 
-        <fieldset className="my-2 px-4 grid grid-cols-2 gap-x-2 border border-border-medium col-span-2">
+        <fieldset className="my-2 px-4 grid grid-cols-2 gap-x-2 border border-border-medium col-span-2 rounded-md">
           <legend className="grid grid-cols-2mb-2 p-3 text-sm font-semibold text-heading">
             Dose
           </legend>
@@ -100,7 +111,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             required
           />
         </fieldset>
-        <fieldset className="my-2 px-4 grid grid-cols-3 gap-x-2 border border-border-medium col-span-2">
+        <fieldset className="my-2 px-4 grid grid-cols-3 gap-x-2 border border-border-medium col-span-2 rounded-md">
           <legend className="mb-2 p-3 text-sm font-semibold text-heading">
             Aminograma
           </legend>
