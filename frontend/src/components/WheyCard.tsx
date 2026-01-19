@@ -8,7 +8,7 @@ export interface WheyCardProps {
 
 export const WheyCard: React.FC<WheyCardProps> = ({ whey }) => {
   return (
-    <div className="flex justify-between align-middle h-60 w-full bg-surface-alt shadow-lg drop-shadow-brand rounded-2xl overflow-visible hover:shadow-xl hover:scale-103 transition duration-300 ease-in-out hover:-translate-y-1">
+    <div className="flex justify-between align-middle h-60 w-full bg-surface-alt shadow-lg drop-shadow-brand rounded-base overflow-visible hover:shadow-xl hover:scale-103 transition duration-300 ease-in-out hover:-translate-y-1">
       <div className="flex w-full h-full overflow-hidden rounded-2xl">
         <img
           src={whey?.image_url || "https://placehold.co/500x600"}

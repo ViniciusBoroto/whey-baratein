@@ -21,6 +21,7 @@
     /* BORDERS */
     /* Default Border (Gray-200) */
     --border-main: #d1d5db;
+    --border-medium: #dadde0;
     --border-light: #ededee;
 
     /* PRIMARY BRAND COLOR (Flowbite Blue) */
@@ -38,8 +39,7 @@
     /* BACKGROUNDS */
     /* Main background (Gray-900) */
     --bg-main: #0a0d14;
-
-    --bg-strong: #0e131f;
+    --bg-strong: #030305;
     /* Secondary background (Gray-800) */
     --bg-alt: #131e2c;
 
@@ -52,8 +52,9 @@
     /* BORDERS */
     /* Default Border (Gray-700) */
     /* --border-main: #374151; */
-    --border-main: rgb(35, 43, 62);
-    --border-light: rgb(40, 47, 62);
+    --border-main: rgb(39, 49, 71);
+    --border-medium: rgb(32, 40, 56);
+    --border-light: rgb(24, 31, 43);
 
     /* PRIMARY BRAND COLOR */
     /* Primary Button Background (Blue-600 - slightly lighter for dark mode) */
@@ -78,6 +79,7 @@
 
   /* Borders */
   --color-border: var(--border-main);
+  --color-border-medium: var(--border-medium);
   --color-border-light: var(--border-light);
 
   /* Custom border widths */
@@ -89,7 +91,7 @@
   --color-brand-text: var(--primary-txt);
 
   /* Keep standard border radius */
-  --radius-base: 0.5rem; /* Flowbite uses slightly rounder 8px usually */
+  --radius-base: 0.75rem; /* Flowbite uses slightly rounder 8px usually */
 }
 
 /* 3. Apply Global Defaults */
