@@ -1,14 +1,100 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    /* --- FLOWBITE LIGHT MODE PALETTE --- */
+
+    /* BACKGROUNDS */
+    /* Main background (White) */
+    --bg-main: #ffffff;
+    /* Secondary background (Gray-50 - used for sidebars/cards) */
+    --bg-alt: #f9fafb;
+
+    /* TEXT */
+    /* Main Headings (Gray-900) */
+    --text-main: #111827;
+    /* Body Text (Gray-500) */
+    --text-body: #6b7280;
+
+    /* BORDERS */
+    /* Default Border (Gray-200) */
+    --border-main: #e5e7eb;
+
+    /* PRIMARY BRAND COLOR (Flowbite Blue) */
+    /* Primary Button Background (Blue-700) */
+    --primary-bg: #1a56db;
+    /* Primary Button Hover (Blue-800) */
+    --primary-hov: #1e429f;
+    /* Primary Text (Blue-600) */
+    --primary-txt: #1c64f2;
+  }
+
+  .dark {
+    /* --- FLOWBITE DARK MODE PALETTE --- */
+
+    /* BACKGROUNDS */
+    /* Main background (Gray-900) */
+    --bg-main: #111827;
+
+    --bg-strong: #0e131f;
+    /* Secondary background (Gray-800) */
+    --bg-alt: #1f2937;
+
+    /* TEXT */
+    /* Main Headings (White) */
+    --text-main: #ffffff;
+    /* Body Text (Gray-400) */
+    --text-body: #9ca3af;
+
+    /* BORDERS */
+    /* Default Border (Gray-700) */
+    --border-main: #374151;
+
+    /* PRIMARY BRAND COLOR */
+    /* Primary Button Background (Blue-600 - slightly lighter for dark mode) */
+    --primary-bg: #2563eb;
+    /* Primary Button Hover (Blue-700) */
+    --primary-hov: #1d4ed8;
+    /* Primary Text (Blue-500) */
+    --primary-txt: #3b82f6;
+  }
+}
+
+/* 2. Map variables to Tailwind Utilities */
 @theme {
-  /* main text color */
-  --color-body: var(--color-stone-600);
-  --color-body-subtle: var(--color-stone-500);
+  /* Backgrounds */
+  --color-surface: var(--bg-main);
+  --color-surface-strong: var(--bg-strong);
+  --color-surface-alt: var(--bg-alt);
 
-  /* text heading colors */
-  --color-heading: var(--color-stone-900);
+  /* Text */
+  --color-heading: var(--text-main);
+  --color-body: var(--text-body);
 
-  /* used for custom brand colors */
-  --color-fg-brand-subtle: var(--color-stone-200);
-  --color-fg-brand: var(--color-stone-950);
-  --color-fg-brand-strong: var(--color-stone-900);
+  /* Borders */
+  --color-border: var(--border-main);
+
+  /* Primary Brand */
+  --color-brand: var(--primary-bg);
+  --color-brand-hover: var(--primary-hov);
+  --color-brand-text: var(--primary-txt);
+
+  /* Keep standard border radius */
+  --radius-base: 0.5rem; /* Flowbite uses slightly rounder 8px usually */
+}
+
+/* 3. Apply Global Defaults */
+@layer base {
+  body {
+    @apply bg-surface text-body antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong {
+    @apply text-heading;
+  }
 }
