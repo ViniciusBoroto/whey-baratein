@@ -12,4 +12,12 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    proxy: {
+      '/whey-proteins': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+    },
+  },
 });
