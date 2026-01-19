@@ -1,5 +1,5 @@
 // src/components/ThemeToggle.jsx
-import { LuMoon, LuSun } from "react-icons/lu";
+import { PiSunBold, PiMoonBold } from "react-icons/pi";
 import { useEffect, useState } from "react";
 import { SquaredButton } from "./SquaredButton";
 
@@ -39,7 +39,11 @@ export function DarkModeButton() {
 
   return (
     <SquaredButton onClick={toggleTheme} className="">
-      {isDark ? <LuSun className="inline" /> : <LuMoon className="inline" />}
+      {isDark ? (
+        <PiSunBold className="inline" />
+      ) : (
+        <PiMoonBold className="inline" />
+      )}
     </SquaredButton>
   );
 }
