@@ -1,6 +1,7 @@
 // src/components/ThemeToggle.jsx
 import { LuMoon, LuSun } from "react-icons/lu";
 import { useEffect, useState } from "react";
+import { SquaredButton } from "./SquaredButton";
 
 export function DarkModeButton() {
   const [isDark, setIsDark] = useState(false);
@@ -37,17 +38,8 @@ export function DarkModeButton() {
   };
 
   return (
-    <button
-      onClick={toggleTheme}
-      // Using the semantic classes we configured earlier:
-      className="flex items-center text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
-    >
-      {isDark ? (
-        <LuSun className="inline mr-2" />
-      ) : (
-        <LuMoon className="inline mr-2" />
-      )}
-      {isDark ? "Modo escuro" : "Modo claro"}
-    </button>
+    <SquaredButton onClick={toggleTheme} className="">
+      {isDark ? <LuSun className="inline" /> : <LuMoon className="inline" />}
+    </SquaredButton>
   );
 }
