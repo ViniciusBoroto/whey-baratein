@@ -104,52 +104,50 @@ export const BrandSelector: React.FC<BrandSelectorProps> = ({
                 : "bg-white border-gray-300"
             }`}
           >
-            {filteredBrands.length > 0 ? (
-              filteredBrands.map((brand) => (
-                <div
-                  key={brand.id}
-                  onClick={() => {
-                    onBrandSelect(brand.id);
-                    setSearchTerm("");
-                  }}
-                  className={`p-3 cursor-pointer hover:bg-gray-100 ${
-                    darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
-                  } flex items-center space-x-3`}
-                >
-                  {brand.logo_url && (
-                    <img
-                      src={brand.logo_url}
-                      alt={brand.name}
-                      className="w-6 h-6 object-contain"
-                    />
-                  )}
-                  <div>
-                    <div className="font-medium">{brand.name}</div>
-                    {brand.description && (
-                      <div
-                        className={`text-xs ${
-                          darkMode ? "text-gray-400" : "text-gray-500"
-                        }`}
-                      >
-                        {brand.description}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))
-            ) : (
+            {filteredBrands.map((brand) => (
               <div
+                key={brand.id}
                 onClick={() => {
-                  setNewBrand({ ...newBrand, name: searchTerm });
-                  setShowCreateForm(true);
+                  onBrandSelect(brand.id);
+                  setSearchTerm("");
                 }}
                 className={`p-3 cursor-pointer hover:bg-gray-100 ${
                   darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
-                } text-blue-600`}
+                } flex items-center space-x-3`}
               >
-                + Criar marca "{searchTerm}"
+                {brand.logo_url && (
+                  <img
+                    src={brand.logo_url}
+                    alt={brand.name}
+                    className="w-6 h-6 object-contain"
+                  />
+                )}
+                <div>
+                  <div className="font-medium">{brand.name}</div>
+                  {brand.description && (
+                    <div
+                      className={`text-xs ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      {brand.description}
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
+            ))}
+
+            <div
+              onClick={() => {
+                setNewBrand({ ...newBrand, name: searchTerm });
+                setShowCreateForm(true);
+              }}
+              className={`p-3 cursor-pointer hover:bg-gray-100 ${
+                darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
+              } text-blue-600`}
+            >
+              + Criar marca "{searchTerm}"
+            </div>
           </div>
         )}
       </div>
