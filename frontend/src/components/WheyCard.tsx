@@ -1,10 +1,14 @@
-import { PiMoneyWavyBold, PiMoneyWavyDuotone } from "react-icons/pi";
+import type { WheyProtein } from "../types/whey-protein";
 
-export const WheyCard = () => {
+export interface WheyCardProps {
+  whey: WheyProtein | undefined;
+}
+
+export const WheyCard: React.FC<WheyCardProps> = ({ whey }) => {
   return (
     <div className="flex justify-between align-middle h-60 w-full bg-surface-alt shadow-lg drop-shadow-brand rounded-2xl overflow-hidden hover:shadow-xl hover:scale-103 transition duration-300 ease-in-out hover:-translate-y-1">
       <img
-        src="https://placehold.co/500x600"
+        src={whey?.image_url || "https://placehold.co/500x600"}
         className="w-2/5 h-full object-cover drop-shadow-xl drop-shadow-border"
         alt=""
       />

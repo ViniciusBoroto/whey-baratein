@@ -1,7 +1,7 @@
 import "./App.css";
 import { DarkModeButton } from "./components/DarkModeButton";
 import logo from "./../public/whey-baratein.png";
-import { WheyCard } from "./components/WheyCard";
+import { HomePage } from "./pages/HomePage";
 
 function App() {
   return (
@@ -25,12 +25,7 @@ function App() {
         </div>
       </header>
       <main className="p-10">
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-7">
-          <WheyCard />
-          <WheyCard />
-          <WheyCard />
-          <WheyCard />
-        </div>
+        <HomePage></HomePage>
       </main>
       <footer>Footer</footer>
     </>
