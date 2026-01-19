@@ -1,1 +1,14 @@
 @import "tailwindcss";
+@theme {
+  /* main text color */
+  --color-body: var(--color-stone-600);
+  --color-body-subtle: var(--color-stone-500);
+
+  /* text heading colors */
+  --color-heading: var(--color-stone-900);
+
+  /* used for custom brand colors */
+  --color-fg-brand-subtle: var(--color-stone-200);
+  --color-fg-brand: var(--color-stone-950);
+  --color-fg-brand-strong: var(--color-stone-900);
+}
