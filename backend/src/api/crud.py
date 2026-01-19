@@ -14,7 +14,7 @@ def get_whey_protein(db: Session, whey_protein_id: int) -> WheyProteinDB:
     return db.query(WheyProteinDB).filter(WheyProteinDB.id == whey_protein_id).first()
 
 def get_whey_proteins(db: Session, skip: int = 0, limit: int = 100) -> List[WheyProteinDB]:
-    return db.query(WheyProteinDB).offset(skip).limit(limit).all()
+    return db.query(WheyProteinDB).join(WheyProteinDB.brand_rel).offset(skip).limit(limit).all()
 
 def update_whey_protein(db: Session, whey_protein_id: int, whey_protein: WheyProteinCreate) -> WheyProteinDB:
     db_whey_protein = db.query(WheyProteinDB).filter(WheyProteinDB.id == whey_protein_id).first()
