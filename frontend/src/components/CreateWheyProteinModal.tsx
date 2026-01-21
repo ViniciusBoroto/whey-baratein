@@ -1,9 +1,10 @@
 import { Modal } from "./Modal";
 import { Input } from "./Input";
 import type { WheyProtein } from "../types/whey-protein";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Brand } from "../types/whey-protein";
 import { PrimaryButton } from "./PrimaryButton";
+import { brandService } from "../services/brand.service";
 
 export interface CreateModalFormProps {
   isOpen: boolean;
@@ -46,12 +47,18 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
   });
   const [brandQuery, setBrandQuery] = useState("");
   const [creatingBrand, setCreatingBrand] = useState(false);
-  const brands: Brand[] = [
-    { id: 1, name: "Optimum Nutrition" },
-    { id: 2, name: "Gold Standard" },
-    { id: 3, name: "Gold Standard 3" },
-    { id: 4, name: "Gold Standard 4" },
-  ];
+  const [brands, setBrands] = useState<Brand[]>([]);
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        let b = await brandService.getAll();
+        setBrands(b);
+      } catch (error) {
+        console.error("Error loading brands:", error);
+      }
+    };
+    fetch();
+  });
   const filteredBrands = useMemo(() => {
     if (!brandQuery) return [];
     return brands.filter((item) =>
@@ -115,7 +122,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
                   key={brand.id}
                 >
                   <img
-                    src="https://placehold.co/50x50"
+                    src={brand.logo_url || "https://placehold.co/50x50"}
                     alt="Logo da marca"
                     className="rounded-full w-8 my-1 mr-3 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-brand shadow-border transition duration-300 ease-in-out"
                   />
