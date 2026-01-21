@@ -1,3 +1,5 @@
+import React from "react";
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -11,19 +13,30 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
 }) => {
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-black/50"
+      className="fixed inset-0 z-50 m-0 flex justify-center items-center w-full h-full bg-black/75"
       onClick={onClose}
     >
       <div
-        className="relative p-4 w-full max-w-xl max-h-full"
+        className="relative p-4 w-full max-w-xl max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative bg-surface border border-border rounded-base shadow-sm p-4 md:p-6">
-          <div className="flex items-center justify-between border-b border-border pb-4 md:pb-5">
+        <div className="relative bg-surface border border-border rounded-base shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between border-b border-border p-4 md:p-6">
             <h3 className="text-lg font-medium text-heading">{title}</h3>
             <button
               type="button"
@@ -50,7 +63,9 @@ export const Modal: React.FC<ModalProps> = ({
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          <div className="pt-4 md:pt-6">{children}</div>
+          <div className="p-4 md:p-6 max-h-[70vh] overflow-y-auto">
+            {children}
+          </div>
         </div>
       </div>
     </div>
