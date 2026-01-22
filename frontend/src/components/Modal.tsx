@@ -5,6 +5,7 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  closeOnOutsideClick?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -12,6 +13,7 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   title,
   children,
+  closeOnOutsideClick = true,
 }) => {
   React.useEffect(() => {
     if (isOpen) {
@@ -29,7 +31,7 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <div
       className="fixed inset-0 z-50 m-0 flex justify-center items-center w-full h-full bg-black/75"
-      onClick={onClose}
+      onClick={closeOnOutsideClick ? onClose : undefined}
     >
       <div
         className="relative p-4 w-full max-w-xl max-h-[90vh]"

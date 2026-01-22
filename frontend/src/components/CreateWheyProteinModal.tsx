@@ -1,25 +1,32 @@
 import { Modal } from "./Modal";
 import { Input } from "./Input";
-import type { WheyProtein } from "../types/whey-protein";
+import type { WheyProteinCreate } from "../types/whey-protein";
 import { useEffect, useMemo, useState } from "react";
 import type { Brand } from "../types/whey-protein";
 import { PrimaryButton } from "./PrimaryButton";
 import { brandService } from "../services/brand.service";
+import { wheyProteinService } from "../services/whey-protein.service";
 
 export interface CreateModalFormProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
   isOpen,
   onClose,
+  onSuccess,
 }) => {
-  const [whey, setWhey] = useState<WheyProtein>({
-    id: 0,
+  const [whey, setWhey] = useState<WheyProteinCreate>({
     name: "",
-    eea_per_serving: 0,
-    eea_price: 0,
+    price: 0,
+    brand_id: undefined,
+    serving_size: 0,
+    total_weight: 0,
+    protein_per_serving: 0,
+    reliability: 0,
+    image_url: "",
     fenilanina: 0,
     histidina: 0,
     isoleucina: 0,
@@ -27,31 +34,15 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
     lisina: 0,
     metionina: 0,
     treonina: 0,
-    price: 0,
-    protein_concentration: 0,
-    protein_per_serving: 0,
-    reliability: 0,
-    servings_per_packet: 0,
-    total_eea_per_packet: 0,
-    total_weight: 0,
-    serving_size: 0,
     triptofano: 0,
     valina: 0,
-    brand_id: undefined,
-    image_url: undefined,
   });
-  const [brand, setBrand] = useState<Brand>({
-    id: 0,
+  const [brand, setBrand] = useState({
     name: "",
     logo_url: "",
     description: "",
   });
-  const [selectedBrand, setSelectedBrand] = useState<Brand>({
-    id: 0,
-    name: "",
-    logo_url: "",
-    description: "",
-  });
+  const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
   const [brandQuery, setBrandQuery] = useState("");
   const [creatingBrand, setCreatingBrand] = useState(false);
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -76,6 +67,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
 
   const handleBrandSelect = (brand: Brand) => {
     setSelectedBrand(brand);
+    setWhey((prev) => ({ ...prev, brand_id: brand.id }));
     setBrandQuery(brand.name);
     setCreatingBrand(false);
   };
@@ -94,31 +86,52 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
     const { id, value } = e.target;
     setWhey((prev) => ({
       ...prev,
-      [id]: value === "" ? 0 : Number(value) || value,
+      [id]: value === "" ? "" : Number(value) || value,
     }));
   };
 
-  const handleSubmitBrand = () => {
+  const handleSubmitBrand = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!brand.name) return;
+
     try {
-      brandService.create({
+      const newBrand = await brandService.create({
         name: brand.name,
         description: brand.description,
         logo_url: brand.logo_url,
       });
+      setBrands((prev) => [...prev, newBrand]);
+      setSelectedBrand(newBrand);
+      setWhey((prev) => ({ ...prev, brand_id: newBrand.id }));
+      setCreatingBrand(false);
+      setBrandQuery(newBrand.name);
+      setBrand({ name: "", logo_url: "", description: "" });
     } catch (error) {
       console.error("Error creating brand:", error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!whey.name || !whey.price || !whey.total_weight || !whey.serving_size || !whey.protein_per_serving || !selectedBrand) {
+      alert("Preencha todos os campos obrigatórios");
       return;
     }
 
-    setBrands((prev) => [...prev, brand]);
-    setSelectedBrand(brand);
-    setCreatingBrand(false);
-    setBrandQuery("");
+    try {
+      await wheyProteinService.create(whey);
+      onSuccess?.();
+      onClose();
+    } catch (error) {
+      console.error("Error creating whey protein:", error);
+      alert("Erro ao criar produto");
+    }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Adicionar Whey Protein">
-      <form action="#" className="grid grid-cols-2 gap-x-4">
+    <Modal isOpen={isOpen} onClose={onClose} title="Adicionar Whey Protein" closeOnOutsideClick={false}>
+      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-x-4">
         <Input
           label="Nome"
           id="name"
@@ -135,7 +148,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             Marca
           </legend>
           {/* SELECTED BRAND */}
-          {!creatingBrand && selectedBrand.id != 0 && (
+          {!creatingBrand && selectedBrand && (
             <div className="flex items-center col-span-2 px-3">
               <p className="mr-3 text-sm text-heading">
                 <strong>Selecionada: </strong>
@@ -175,7 +188,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
                   <img
                     src={brand.logo_url || "https://placehold.co/50x50"}
                     alt="Logo da marca"
-                    className="rounded-full w-8 h-8 mr-3 object-cover flex-shrink-0"
+                    className="rounded-full w-8 h-8 mr-3 object-cover shrink-0"
                   />
                   {brand.name}
                 </li>
@@ -220,12 +233,13 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
                 wrapperClassName="col-span-2"
               />
               <PrimaryButton
+                type="button"
                 className="col-span-1 bg-red-600 hover:bg-red-700"
                 onClick={() => setCreatingBrand(false)}
               >
                 Cancelar
               </PrimaryButton>
-              <PrimaryButton className="col-span-1" onClick={handleSubmitBrand}>
+              <PrimaryButton type="button" className="col-span-1" onClick={handleSubmitBrand}>
                 Criar
               </PrimaryButton>
             </form>
@@ -235,6 +249,8 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
           label="Preço (R$/pacote)"
           id="price"
           type="number"
+          step="0.01"
+          min="0"
           value={whey.price}
           onChange={handleInputChange}
           placeholder="0,00"
@@ -244,10 +260,20 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
           label="Tamanho (g/pacote)"
           id="total_weight"
           type="number"
+          min="0"
           value={whey.total_weight}
           onChange={handleInputChange}
           placeholder="0"
           required
+        />
+        <Input
+          label="URL da Imagem"
+          id="image_url"
+          type="text"
+          value={whey.image_url}
+          onChange={handleInputChange}
+          placeholder="https://..."
+          wrapperClassName="col-span-2"
         />
 
         <fieldset className="my-2 px-4 grid grid-cols-2 gap-x-2 border border-border-medium col-span-2 rounded-md">
@@ -258,6 +284,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             label="Tamanho da dose (g)"
             id="serving_size"
             type="number"
+            min="0"
             value={whey.serving_size}
             onChange={handleInputChange}
             placeholder="0"
@@ -267,10 +294,21 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             label="Proteína por dose (g)"
             id="protein_per_serving"
             type="number"
+            min="0"
             value={whey.protein_per_serving}
             onChange={handleInputChange}
             placeholder="0"
             required
+          />
+          <Input
+            label="Confiabilidade (0-5)"
+            id="reliability"
+            type="number"
+            min="0"
+            max="5"
+            value={whey.reliability}
+            onChange={handleInputChange}
+            placeholder="0"
           />
         </fieldset>
         <fieldset className="my-2 px-4 grid grid-cols-3 gap-x-2 border border-border-medium col-span-2 rounded-md">
@@ -281,6 +319,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             label="Fenilanina (mg)"
             id="fenilanina"
             type="number"
+            min="0"
             value={whey.fenilanina}
             onChange={handleInputChange}
             placeholder="000"
@@ -289,6 +328,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             label="Histidina (mg)"
             id="histidina"
             type="number"
+            min="0"
             value={whey.histidina}
             onChange={handleInputChange}
             placeholder="000"
@@ -297,6 +337,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             label="Isoleucina (mg)"
             id="isoleucina"
             type="number"
+            min="0"
             value={whey.isoleucina}
             onChange={handleInputChange}
             placeholder="000"
@@ -305,6 +346,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             label="Leucina (mg)"
             id="leucina"
             type="number"
+            min="0"
             value={whey.leucina}
             onChange={handleInputChange}
             placeholder="000"
@@ -313,6 +355,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             label="Lisina (mg)"
             id="lisina"
             type="number"
+            min="0"
             value={whey.lisina}
             onChange={handleInputChange}
             placeholder="000"
@@ -321,6 +364,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             label="Metionina (mg)"
             id="metionina"
             type="number"
+            min="0"
             value={whey.metionina}
             onChange={handleInputChange}
             placeholder="000"
@@ -329,6 +373,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             label="Treonina (mg)"
             id="treonina"
             type="number"
+            min="0"
             value={whey.treonina}
             onChange={handleInputChange}
             placeholder="000"
@@ -337,6 +382,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             label="Triptofano (mg)"
             id="triptofano"
             type="number"
+            min="0"
             value={whey.triptofano}
             onChange={handleInputChange}
             placeholder="000"
@@ -345,6 +391,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             label="Valina (mg)"
             id="valina"
             type="number"
+            min="0"
             value={whey.valina}
             onChange={handleInputChange}
             placeholder="000"

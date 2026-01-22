@@ -21,15 +21,15 @@ class WheyProteinCreate(BaseModel):
     protein_per_serving: int
     reliability: int = 0
     image_url: Optional[str] = None
-    fenilanina: float = 0.0
-    histidina: float = 0.0
-    isoleucina: float = 0.0
-    leucina: float = 0.0
-    lisina: float = 0.0
-    metionina: float = 0.0
-    treonina: float = 0.0
-    triptofano: float = 0.0
-    valina: float = 0.0
+    fenilanina: int = 0.0
+    histidina: int = 0.0
+    isoleucina: int = 0.0
+    leucina: int = 0.0
+    lisina: int = 0.0
+    metionina: int = 0.0
+    treonina: int = 0.0
+    triptofano: int = 0.0
+    valina: int = 0.0
     
     @field_validator('fenilanina', 'histidina', 'isoleucina', 'leucina', 'lisina', 'metionina', 'treonina', 'triptofano', 'valina', mode='before')
     @classmethod
