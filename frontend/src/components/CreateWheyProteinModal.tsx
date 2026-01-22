@@ -40,10 +40,11 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
     brand_id: undefined,
     image_url: undefined,
   });
-  const [brand, setBrand] = useState({
+  const [brand, setBrand] = useState<Brand>({
+    id: 0,
     name: "",
-    description: "",
     logo_url: "",
+    description: "",
   });
   const [brandQuery, setBrandQuery] = useState("");
   const [creatingBrand, setCreatingBrand] = useState(false);
@@ -65,6 +66,12 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
       item.name.toLowerCase().includes(brandQuery.toLowerCase()),
     );
   }, [brandQuery, brands]);
+
+  const handleBrandSelect = (brand: Brand) => {
+    setBrand(brand);
+    setBrandQuery("");
+    setCreatingBrand(false);
+  };
 
   const handleBrandInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBrandQuery(e.target.value);
@@ -98,28 +105,47 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
           required
         />
 
-        <fieldset className="my-2 px-4 pb-5 grid grid-cols-2 gap-x-2 border border-border-medium col-span-2 rounded-md">
+        <fieldset className="my-2 px-4 pb-5 mb-5 grid grid-cols-2 gap-x-2 border border-border-medium col-span-2 rounded-md">
           <legend className="grid grid-cols-2mb-2 p-3 text-sm font-semibold text-heading">
             Marca
           </legend>
+          {/* SELECTED BRAND */}
+          {!creatingBrand && brand.id != 0 && (
+            <div className="flex items-center col-span-2 px-3">
+              <p className="mr-3 text-sm text-heading">
+                <strong>Selecionada: </strong>
+              </p>
+              <div className="flex items-center border-border-light border rounded-full shadow-md shadow-border-light px-2">
+                <img
+                  src={brand.logo_url || "https://placehold.co/50x50"}
+                  alt="Logo da marca"
+                  className="rounded-full w-8 my-1 mr-3 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-brand shadow-border transition duration-300 ease-in-out"
+                />
+                <p>{brand.name}</p>
+              </div>
+            </div>
+          )}
+          {/* Brand input */}
           {!creatingBrand && (
             <Input
-              label=""
+              label="Pesquisar marca"
               id="brand"
               type="text"
               value={brandQuery}
               onChange={handleBrandInputChange}
-              placeholder="Marca do whey"
+              placeholder="Nome da marca"
               wrapperClassName="col-span-2"
               required
             />
           )}
+          {/* BRAND LIST */}
           {brandQuery && !creatingBrand && (
             <ul className="col-span-2 p-0 m-0 mb-5 -mt-3 rounded-base border-border">
               {filteredBrands.map((brand) => (
                 <li
                   className="group flex items-center border border-border-light p-3 bg-surface-alt hover:bg-surface border-b-border hover:border-x-brand-light light hover:border-y-0 hover:border-x  "
                   key={brand.id}
+                  onClick={() => handleBrandSelect(brand)}
                 >
                   <img
                     src={brand.logo_url || "https://placehold.co/50x50"}
@@ -137,6 +163,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
               </li>
             </ul>
           )}
+          {/* BRAND FORM */}
           {creatingBrand && (
             <form className="col-span-2 grid grid-cols-2 gap-x-2">
               <Input
@@ -167,7 +194,10 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
                 placeholder="https://..."
                 wrapperClassName="col-span-2"
               />
-              <PrimaryButton className="col-span-1 bg-red-600 hover:bg-red-700">
+              <PrimaryButton
+                className="col-span-1 bg-red-600 hover:bg-red-700"
+                onClick={() => setCreatingBrand(false)}
+              >
                 Cancelar
               </PrimaryButton>
               <PrimaryButton className="col-span-1">Criar</PrimaryButton>
