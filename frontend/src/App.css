@@ -14,15 +14,15 @@
 
     /* TEXT */
     /* Main Headings (Gray-900) */
-    --text-main: #111827;
+    --text-main: #090b11;
     /* Body Text (Gray-500) */
-    --text-body: #6b7280;
+    --text-body: #616774;
 
     /* BORDERS */
     /* Default Border (Gray-200) */
-    --border-main: #d1d5db;
-    --border-medium: #dadde0;
-    --border-light: #ededee;
+    --border-main: #b8b8b8;
+    --border-medium: #cccccc;
+    --border-light: #dbdbdb;
 
     /* PRIMARY BRAND COLOR (Flowbite Blue) */
     /* Primary Button Background (Blue-700) */

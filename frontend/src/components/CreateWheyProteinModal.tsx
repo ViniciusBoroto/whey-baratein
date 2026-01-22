@@ -55,17 +55,18 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
   const [brandQuery, setBrandQuery] = useState("");
   const [creatingBrand, setCreatingBrand] = useState(false);
   const [brands, setBrands] = useState<Brand[]>([]);
+
   useEffect(() => {
-    const fetch = async () => {
+    const fetchBrands = async () => {
       try {
-        let b = await brandService.getAll();
+        const b = await brandService.getAll();
         setBrands(b);
       } catch (error) {
         console.error("Error loading brands:", error);
       }
     };
-    fetch();
-  });
+    fetchBrands();
+  }, []);
   const filteredBrands = useMemo(() => {
     if (!brandQuery) return [];
     return brands.filter((item) =>
@@ -75,7 +76,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
 
   const handleBrandSelect = (brand: Brand) => {
     setSelectedBrand(brand);
-    setBrandQuery("");
+    setBrandQuery(brand.name);
     setCreatingBrand(false);
   };
 
@@ -139,7 +140,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
               <p className="mr-3 text-sm text-heading">
                 <strong>Selecionada: </strong>
               </p>
-              <div className="flex items-center border-border-light border rounded-full shadow-md shadow-border-light px-2">
+              <div className="flex items-center border-border-light border rounded-full shadow-md shadow-border-light px-2 py-0.5 bg-surface-strong">
                 <img
                   src={selectedBrand.logo_url || "https://placehold.co/50x50"}
                   alt="Logo da marca"
@@ -164,23 +165,23 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
           )}
           {/* BRAND LIST */}
           {brandQuery && !creatingBrand && (
-            <ul className="col-span-2 p-0 m-0 mb-5 -mt-3 rounded-base border-border">
+            <ul className="col-span-2 p-0 m-0 mb-5 -mt-3 rounded-md border border-border-light overflow-hidden">
               {filteredBrands.map((brand) => (
                 <li
-                  className="group flex items-center border border-border-light p-3 bg-surface-alt hover:bg-surface border-b-border hover:border-x-brand-light light hover:border-y-0 hover:border-x  "
+                  className="group cursor-pointer flex items-center border-b border-border-light p-3 bg-surface-alt hover:bg-surface transition-colors duration-200"
                   key={brand.id}
                   onClick={() => handleBrandSelect(brand)}
                 >
                   <img
                     src={brand.logo_url || "https://placehold.co/50x50"}
                     alt="Logo da marca"
-                    className="rounded-full w-8 my-1 mr-3 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-brand shadow-border transition duration-300 ease-in-out"
+                    className="rounded-full w-8 h-8 mr-3 object-cover flex-shrink-0"
                   />
                   {brand.name}
                 </li>
               ))}
               <li
-                className="cursor-pointer text-brand border-b border-x border-brand-light p-3 hover:bg-brand-light hover:text-white  rounded-b-base"
+                className="cursor-pointer text-brand p-3 hover:bg-brand-light hover:text-white transition-colors duration-200"
                 onClick={() => setCreatingBrand(true)}
               >
                 + Adicionar Marca
