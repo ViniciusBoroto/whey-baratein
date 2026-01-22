@@ -46,6 +46,12 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
     logo_url: "",
     description: "",
   });
+  const [selectedBrand, setSelectedBrand] = useState<Brand>({
+    id: 0,
+    name: "",
+    logo_url: "",
+    description: "",
+  });
   const [brandQuery, setBrandQuery] = useState("");
   const [creatingBrand, setCreatingBrand] = useState(false);
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -68,7 +74,7 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
   }, [brandQuery, brands]);
 
   const handleBrandSelect = (brand: Brand) => {
-    setBrand(brand);
+    setSelectedBrand(brand);
     setBrandQuery("");
     setCreatingBrand(false);
   };
@@ -91,6 +97,24 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
     }));
   };
 
+  const handleSubmitBrand = () => {
+    try {
+      brandService.create({
+        name: brand.name,
+        description: brand.description,
+        logo_url: brand.logo_url,
+      });
+    } catch (error) {
+      console.error("Error creating brand:", error);
+      return;
+    }
+
+    setBrands((prev) => [...prev, brand]);
+    setSelectedBrand(brand);
+    setCreatingBrand(false);
+    setBrandQuery("");
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Adicionar Whey Protein">
       <form action="#" className="grid grid-cols-2 gap-x-4">
@@ -110,18 +134,18 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
             Marca
           </legend>
           {/* SELECTED BRAND */}
-          {!creatingBrand && brand.id != 0 && (
+          {!creatingBrand && selectedBrand.id != 0 && (
             <div className="flex items-center col-span-2 px-3">
               <p className="mr-3 text-sm text-heading">
                 <strong>Selecionada: </strong>
               </p>
               <div className="flex items-center border-border-light border rounded-full shadow-md shadow-border-light px-2">
                 <img
-                  src={brand.logo_url || "https://placehold.co/50x50"}
+                  src={selectedBrand.logo_url || "https://placehold.co/50x50"}
                   alt="Logo da marca"
                   className="rounded-full w-8 my-1 mr-3 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-brand shadow-border transition duration-300 ease-in-out"
                 />
-                <p>{brand.name}</p>
+                <p>{selectedBrand.name}</p>
               </div>
             </div>
           )}
@@ -200,7 +224,9 @@ export const CreateWheyProteinModal: React.FC<CreateModalFormProps> = ({
               >
                 Cancelar
               </PrimaryButton>
-              <PrimaryButton className="col-span-1">Criar</PrimaryButton>
+              <PrimaryButton className="col-span-1" onClick={handleSubmitBrand}>
+                Criar
+              </PrimaryButton>
             </form>
           )}
         </fieldset>
