@@ -6,11 +6,11 @@
 
     /* BACKGROUNDS */
     /* Main background (White) */
-    --bg-main: #ffffff;
+    --bg-main: #eeeeee;
 
-    --bg-strong: #ffffff;
+    --bg-strong: #e6e6e6;
     /* Secondary background (Gray-50 - used for sidebars/cards) */
-    --bg-alt: #f4f4f4;
+    --bg-alt: #ffffff;
 
     /* TEXT */
     /* Main Headings (Gray-900) */
@@ -101,7 +101,8 @@
   --color-brand-light-text: var(--primary-txt-light);
 
   /* Keep standard border radius */
-  --radius-base: 0.75rem; /* Flowbite uses slightly rounder 8px usually */
+  --radius-base: 0.75rem;
+  /* Flowbite uses slightly rounder 8px usually */
 }
 
 /* 3. Apply Global Defaults */
@@ -109,6 +110,7 @@
   body {
     @apply bg-surface text-body antialiased;
   }
+
   h1,
   h2,
   h3,

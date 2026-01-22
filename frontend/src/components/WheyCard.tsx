@@ -16,7 +16,7 @@ export const WheyCard: React.FC<WheyCardProps> = ({ whey }) => {
           className="h-full w-full object-cover"
         />
       </div>
-      <div className="w-3/5 h-full bg-surface-alt p-4 flex flex-col justify-between ">
+      <div className="w-3/5 h-full bg-surface-alt p-4 flex flex-col justify-between rounded-r-base">
         <div>
           <h2 className="text-lg ">{whey.name}</h2>
           <div className="flex items-center">
