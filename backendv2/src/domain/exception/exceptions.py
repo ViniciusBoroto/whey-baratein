@@ -1,0 +1,12 @@
+class EntityNotFoundException(Exception):
+    pass
+
+
+class WheyNotFoundException(EntityNotFoundException):
+    def __init__(self, whey_id: str):
+        super().__init__(f"Whey with id '{whey_id}' not found")
+
+
+class BrandNotFoundException(EntityNotFoundException):
+    def __init__(self, brand_id: int):
+        super().__init__(f"Brand with id '{brand_id}' not found")

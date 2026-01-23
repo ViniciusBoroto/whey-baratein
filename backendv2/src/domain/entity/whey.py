@@ -55,7 +55,7 @@ class Whey(WheyCreate):
     def total_eaa_per_packet_g(self) -> float:
         """Returns total EAAs in the whole packet in GRAMS."""
         total_mg_per_serving = self.get_total_eaa_mg()
-        total_mg_packet = total_mg_per_serving * self.servings_per_packet()
+        total_mg_packet = total_mg_per_serving * self.servings_per_packet
         return total_mg_packet / 1000.0  # Convert mg to g
 
     @property
