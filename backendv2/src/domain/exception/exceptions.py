@@ -1,6 +1,9 @@
 class EntityNotFoundException(Exception):
     pass
 
+class ProductNotFoundException(EntityNotFoundException):
+    def __init__(self, product_id: str):
+        super().__init__(f"Product with id '{product_id}' not found")
 
 class WheyNotFoundException(EntityNotFoundException):
     def __init__(self, whey_id: str):

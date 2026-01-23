@@ -21,7 +21,17 @@ class SqlUserRepositoryAdapter(UserRepository):
         return UserRead(id=new_user.id, name=name, email=email, role=role)
 
     def update_user(self, user_id: int, name: str, email: str) -> UserRead:
-        raise NotImplementedError
+        user = self._session.get(UserORM, user_id)
+        if user is None:
+            raise UserNotFoundException(user_id)
+        user.name = name
+        user.email = email
+        self._session.commit()
+        return UserRead(id=user.id, name=name, email=email, role=user.role)
 
     def delete_user(self, user_id: int) -> None:
-        raise NotImplementedError
+        user = self._session.get(UserORM, user_id)
+        if user is None:
+            raise UserNotFoundException(user_id)
+        self._session.delete(user)
+        self._session.commit()
