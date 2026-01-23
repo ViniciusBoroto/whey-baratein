@@ -2,7 +2,6 @@ from unittest.mock import Mock
 import pytest
 from application.usecase.whey_usecases import WheyUseCases
 from domain.entity.brand import Brand
-from domain.entity.user import User
 from domain.entity.whey import WheyRead, WheyCreate
 from domain.exception import BrandNotFoundException, WheyNotFoundException
 

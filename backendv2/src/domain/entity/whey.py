@@ -62,8 +62,7 @@ class WheyRead(WheyCreate, ProductRead):
         if self.serving_size == 0: return 0
         return (self.protein_per_serving / self.serving_size) * 100
 
-class WheyDetails(WheyRead):
-    brand: Brand
+class WheyDetails(ProductDetails, WheyRead):
 
     def get_total_eaa_mg(self) -> int:
         return sum([

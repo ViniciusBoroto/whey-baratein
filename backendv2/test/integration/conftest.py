@@ -1,0 +1,48 @@
+import pytest
+from infrastructure.persistence.schemas.schemas import Base
+from testcontainers.postgres import PostgresContainer
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import sessionmaker, Session
+# from src.models import Base  # Import your SQLAlchemy declarative base
+
+# 1. Spin up the Container (Session Scope = Runs once per test suite)
+@pytest.fixture(scope="session")
+def postgres_container():
+    with PostgresContainer("postgres:15-alpine") as postgres:
+        yield postgres
+
+# 2. Create the Engine (Session Scope)
+@pytest.fixture(scope="session")
+def engine(postgres_container):
+    db_url = postgres_container.get_connection_url()
+    engine = create_engine(db_url)
+    
+    # Create tables once
+    with engine.begin() as conn:
+        Base.metadata.create_all(conn)
+        
+    yield engine
+    
+    # Teardown (optional as container handles it, but good practice)
+    engine.dispose()
+
+# 3. The Db Session (Function Scope = Runs for every test function)
+@pytest.fixture(scope="function")
+def db_session(engine):
+    """
+    Creates a new database session for a test.
+    Rolls back the transaction after the test is complete.
+    """
+    connection = engine.connect()
+    transaction = connection.begin()
+    
+    # Bind the session to this specific connection/transaction
+    SessionLocal = sessionmaker(bind=connection)
+    session = SessionLocal()
+
+    yield session
+
+    # TEARDOWN: Close session and rollback transaction to keep DB clean
+    session.close()
+    transaction.rollback()
+    connection.close()
