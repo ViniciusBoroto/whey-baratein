@@ -1,4 +1,4 @@
-from domain.port.whey_ports import WheyRepository
+from domain.port.whey_repository import WheyRepository
 
 
 class DeleteWheyUseCase:

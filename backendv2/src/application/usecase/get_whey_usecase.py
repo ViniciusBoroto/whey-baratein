@@ -1,6 +1,6 @@
 from domain.entity.whey import WheyDetails
-from domain.port.brand_ports import BrandRepository
-from domain.port.whey_ports import WheyRepository
+from domain.port.brand_repostory import BrandRepository
+from domain.port.whey_repository import WheyRepository
 
 
 class GetWheyUseCase:

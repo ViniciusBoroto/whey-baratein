@@ -1,9 +1,9 @@
 import logging
 from domain.entity.brand import Brand
 from domain.entity.whey import Whey, WheyCreate, WheyDetails
-from domain.port.brand_ports import BrandRepository
-from domain.port.user_ports import UserRepository
-from domain.port.whey_ports import WheyRepository
+from domain.port.brand_repostory import BrandRepository
+from domain.port.user_repository import UserRepository
+from domain.port.whey_repository import WheyRepository
 
 
 class CreateWheyUseCase:
