@@ -55,10 +55,10 @@ class WheyProtein(BaseModel):
         return self.total_weight / self.serving_size
     def total_eea_per_packet(self) -> float:
         return self.eea_per_serving() * self.servings_per_packet()
-    def eea_price(self) -> float:
+    def eea_price(self) -> float| None:
         total_eea = self.total_eea_per_packet()
         if total_eea == 0:
-            return 999999.0  # Use a large number instead of infinity for JSON compatibility
+            return None
         return self.price / total_eea
     def protein_concentration(self) -> float:
         if self.serving_size == 0:
