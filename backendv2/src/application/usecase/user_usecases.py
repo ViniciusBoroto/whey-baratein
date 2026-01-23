@@ -10,7 +10,7 @@ class UserUseCases:
     
     def create(self, user_create: UserCreate) -> UserRead:
         hashed_password = self._password_hasher.hash(user_create.plain_password)
-        return self._user_repo.create_user(user_create.name, user_create.email, hashed_password)
+        return self._user_repo.create_user(user_create.name, user_create.email, hashed_password, user_create.role)
     
     def get_by_id(self, user_id: int) -> UserRead:
         return self._user_repo.get_user_by_id(user_id)

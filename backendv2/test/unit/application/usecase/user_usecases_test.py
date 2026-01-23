@@ -5,18 +5,25 @@ from domain.entity.user import UserRead, UserCreate, UserRole
 from domain.exception import UserNotFoundException
 
 
-def test_create_user():
+@pytest.mark.parametrize("role", [
+    (UserRole.USER),
+    (UserRole.ADMIN),
+])
+
+def test_create_user(role):
     mock_user_repo = Mock()
     mock_password_hasher = Mock()
     mock_password_hasher.hash.return_value = "hashed_password"
-    result_user = UserRead(id=1, name="name", email="email", role=UserRole.USER )
+    result_user = UserRead(id=1, name="name", email="email", role=role )
     mock_user_repo.create_user.return_value = result_user
 
     uc = UserUseCases(mock_user_repo, mock_password_hasher)
-    result = uc.create(UserCreate(name="name", email="email", plain_password="plain_password"))
+    result = uc.create(UserCreate(name="name", email="email", plain_password="plain_password", role=role))
 
     mock_password_hasher.hash.assert_called_once_with("plain_password")
-    assert mock_user_repo.create_user.call_args[0][2] == "hashed_password"
+    create_args = mock_user_repo.create_user.call_args[0]
+    assert create_args[2] == "hashed_password"
+    assert create_args[3] == role
     assert result == result_user
 
 

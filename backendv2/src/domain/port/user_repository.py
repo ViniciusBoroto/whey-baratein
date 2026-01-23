@@ -1,7 +1,7 @@
 
 from abc import ABC, abstractmethod
 
-from domain.entity.user import UserRead
+from domain.entity.user import UserRead, UserRole
 
 
 
@@ -11,7 +11,7 @@ class UserRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def create_user(self, name: str, email: str, password: str) -> UserRead:
+    def create_user(self, name: str, email: str, password: str, role: UserRole = UserRole.USER) -> UserRead:
         raise NotImplementedError
 
     @abstractmethod
