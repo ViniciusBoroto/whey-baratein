@@ -1,11 +1,13 @@
 from domain.exception.exceptions import (
     EntityNotFoundException,
     WheyNotFoundException,
-    BrandNotFoundException
+    BrandNotFoundException,
+    UserNotFoundException
 )
 
 __all__ = [
     "EntityNotFoundException",
     "WheyNotFoundException",
-    "BrandNotFoundException"
+    "BrandNotFoundException",
+    "UserNotFoundException"
 ]
