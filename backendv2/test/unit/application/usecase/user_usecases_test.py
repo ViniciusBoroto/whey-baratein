@@ -1,7 +1,7 @@
 from unittest.mock import Mock
 import pytest
 from application.usecase.user_usecases import UserUseCases
-from domain.entity.user import User, UserCreate
+from domain.entity.user import UserRead, UserCreate, UserRole
 from domain.exception import UserNotFoundException
 
 
@@ -9,7 +9,7 @@ def test_create_user():
     mock_user_repo = Mock()
     mock_password_hasher = Mock()
     mock_password_hasher.hash.return_value = "hashed_password"
-    result_user = User(id=1, name="name", email="email", password="hashed_password")
+    result_user = UserRead(id=1, name="name", email="email", role=UserRole.USER )
     mock_user_repo.create_user.return_value = result_user
 
     uc = UserUseCases(mock_user_repo, mock_password_hasher)
@@ -33,7 +33,7 @@ def test_create_user_duplicate_email():
 
 
 def test_get_user():
-    user = User(id=1, name="name", email="email", password="hashed_password")
+    user = UserRead(id=1, name="name", email="email")
     
     mock_user_repo = Mock()
     mock_user_repo.get_user_by_id.return_value = user
@@ -57,7 +57,7 @@ def test_get_user_not_found():
 
 
 def test_update_user():
-    updated_user = User(id=1, name="updated_name", email="updated@email.com", password="hashed_password")
+    updated_user = UserRead(id=1, name="updated_name", email="updated@email.com")
     
     mock_user_repo = Mock()
     mock_user_repo.update_user.return_value = updated_user
