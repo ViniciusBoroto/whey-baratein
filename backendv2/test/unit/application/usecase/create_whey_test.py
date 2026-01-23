@@ -3,6 +3,7 @@ from unittest.mock import Mock
 
 from application.usecase.create_whey_usecase import CreateWheyUseCase
 from domain.entity.brand import Brand
+from domain.entity.user import User
 from domain.entity.whey import Whey, WheyCreate
 
 
@@ -29,7 +30,10 @@ def test_create_whey_when_all_found(name, price, serving_size, total_weight, pro
     mock_whey_repo = Mock()
     mock_whey_repo.create_whey.return_value = Whey(**wheyCreate.__dict__, id="123")
 
-    uc = CreateWheyUseCase(mock_brand_repo, mock_whey_repo)
+    mock_user_repo = Mock()
+    mock_whey_repo.get_user_by_id.return_value = User(id=owner_id, name="name", email="email", password="password") if owner_id is not None else None
+
+    uc = CreateWheyUseCase(mock_brand_repo, mock_whey_repo, mock_whey_repo)
     result = uc.Execute(wheyCreate)
     
     assert result.id == "123"
@@ -48,8 +52,14 @@ def test_create_whey_brand_not_found():
     mock_brand_repo = Mock()
     mock_brand_repo.get_brand_by_id.side_effect = BrandNotFoundException(999)
     mock_whey_repo = Mock()
+    mock_whey_repo.create_whey.return_value = Whey(**wheyCreate.__dict__, id="123")
+    mock_user_repo = Mock()
+    mock_whey_repo.get_user_by_id.return_value = User(id=123, name="name", email="email", password="password")
 
-    uc = CreateWheyUseCase(mock_brand_repo, mock_whey_repo)
+    uc = CreateWheyUseCase(mock_brand_repo, mock_whey_repo, mock_user_repo)
+
+
+
     
     with pytest.raises(BrandNotFoundException):
         uc.Execute(wheyCreate)
