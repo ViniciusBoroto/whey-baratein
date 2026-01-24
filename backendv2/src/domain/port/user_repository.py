@@ -7,17 +7,17 @@ from domain.entity.user import UserRead, UserRole
 
 class UserRepository(ABC):
     @abstractmethod
-    def get_user_by_id(self, user_id: int) -> UserRead:
+    def get_by_id(self, user_id: int) -> UserRead:
         raise NotImplementedError
 
     @abstractmethod
-    def create_user(self, name: str, email: str, password: str, role: UserRole = UserRole.USER) -> UserRead:
+    def create(self, name: str, email: str, password: str, role: UserRole = UserRole.USER) -> UserRead:
         raise NotImplementedError
 
     @abstractmethod
-    def update_user(self, user_id: int, name: str, email: str) -> UserRead:
+    def update(self, user_id: int, name: str, email: str) -> UserRead:
         raise NotImplementedError
 
     @abstractmethod
-    def delete_user(self, user_id: int) -> None:
+    def delete(self, user_id: int) -> None:
         raise NotImplementedError
