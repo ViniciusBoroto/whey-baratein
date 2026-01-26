@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from typing import List
 
+from domain.entity.product import ProductType
 from domain.entity.whey import WheyCreate, WheyDetails, WheyRead
 from domain.exception.exceptions import WheyNotFoundException
 from domain.port.generic_product_repository import GenericProductRepository
@@ -14,4 +15,4 @@ class SqlWheyRepositoryAdapter(GenericSqlProductRepositoryAdapter[WheyORM, WheyC
     details_class = WheyDetails
 
     def __init__(self, session: Session):
-        super().__init__(session)
+        super().__init__(session, WheyORM, WheyCreate, WheyRead, WheyDetails, ProductType.WHEY)

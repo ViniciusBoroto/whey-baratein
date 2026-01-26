@@ -1,7 +1,10 @@
 run:
 	uv run main.py
 
-test:
-	uv run pytest
+test-serial:
+	uv run pytest -m
 
-.PHONY: test run
+test:
+	uv run pytest -n auto
+
+.PHONY: test run test-serial

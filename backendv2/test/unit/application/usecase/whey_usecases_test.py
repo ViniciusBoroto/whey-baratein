@@ -2,8 +2,10 @@ from unittest.mock import Mock
 import pytest
 from application.usecase.whey_usecases import WheyUseCases
 from domain.entity.brand import Brand
+from domain.entity.product import ProductType
 from domain.entity.whey import WheyDetails, WheyRead, WheyCreate
 from domain.exception import BrandNotFoundException, WheyNotFoundException
+from domain.exception.exceptions import ProductNotFoundException
 
 
 @pytest.mark.parametrize("name,price,serving_size,total_weight,protein_per_serving,owner_id", [
@@ -79,8 +81,8 @@ def test_get_whey_not_found():
 
     uc = WheyUseCases(mock_brand_repo, mock_whey_repo)
     
-    with pytest.raises(WheyNotFoundException):
-        uc.get_by_id("123")
+    with pytest.raises(ProductNotFoundException):
+        uc.get_by_id(123)
 
 
 
@@ -111,11 +113,11 @@ def test_update_whey_not_found():
     mock_brand_repo.get_brand_by_id.return_value = brand
     
     mock_whey_repo = Mock()
-    mock_whey_repo.update.side_effect = WheyNotFoundException(999)
+    mock_whey_repo.update.side_effect = ProductNotFoundException(999, ProductType.WHEY)
 
     uc = WheyUseCases(mock_brand_repo, mock_whey_repo)
     
-    with pytest.raises(WheyNotFoundException):
+    with pytest.raises(ProductNotFoundException):
         uc.update(999, wheyCreate)
 
 

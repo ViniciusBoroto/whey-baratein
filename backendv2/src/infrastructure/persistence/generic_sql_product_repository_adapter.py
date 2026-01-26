@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from typing import TypeVar, Generic, List, Type
-from domain.entity.product import ProductCreate, ProductDetails, ProductRead
+from domain.entity.product import ProductCreate, ProductDetails, ProductRead, ProductType
 from domain.exception.exceptions import BrandNotFoundException, ProductNotFoundException, UserNotFoundException
 from infrastructure.persistence.schemas.schemas import BrandORM, ProductORM
 
@@ -20,13 +20,16 @@ class GenericSqlProductRepositoryAdapter(Generic[TOrm,TCreate, TRead, TDetails])
     create_class: Type[TCreate]
     read_class: Type[TRead]
     details_class: Type[TDetails]
+    type : ProductType
     
-    def __init__(self, session: Session, orm_class: Type[TOrm],create_class: Type[TCreate], read_class: Type[TRead], details_class: Type[TDetails]):
+    def __init__(self, session: Session, orm_class: Type[TOrm],create_class: Type[TCreate], read_class: Type[TRead], details_class: Type[TDetails], product_type: ProductType):
         self._session = session
         self.orm_class = orm_class
         self.create_class = create_class
         self.read_class = read_class
         self.details_class = details_class
+        self.type = product_type
+
 
     def create(self, product: TCreate) -> TRead:
         orm_data = {k: v for k, v in product.model_dump().items() if k != 'type'}
@@ -45,19 +48,20 @@ class GenericSqlProductRepositoryAdapter(Generic[TOrm,TCreate, TRead, TDetails])
         return self._to_read(product_orm)
     
     def get_by_id(self, product_id: int) -> TDetails:
-        stmt = select(self.orm_class).join(self.orm_class.brand)
+        stmt = select(self.orm_class).join(self.orm_class.brand).where(self.orm_class.id == product_id)
         product = self._session.execute(stmt).scalars().first()
         if product is None:
-            raise ProductNotFoundException(product_id)
+            raise ProductNotFoundException(product_id, self.type)
         return self._to_details(product)
     
     def update(self, product_id: int, product_create: TCreate) -> TRead:
         fetched_product = self._session.get(self.orm_class, product_id)
         if fetched_product is None:
-            raise ProductNotFoundException(product_id)
+            raise ProductNotFoundException(product_id, self.type)
         
         for key, value in product_create.model_dump().items():
-            setattr(fetched_product, key, value)
+            if key != 'type':
+                setattr(fetched_product, key, value)
         
         try:
             self._session.commit()
@@ -74,7 +78,7 @@ class GenericSqlProductRepositoryAdapter(Generic[TOrm,TCreate, TRead, TDetails])
     def delete(self, product_id: int) -> None:
         product = self._session.get(self.orm_class, product_id)
         if product is None:
-            raise ProductNotFoundException(product_id)
+            raise ProductNotFoundException(product_id, self.type)
         self._session.delete(product)
         self._session.commit()
     

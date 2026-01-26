@@ -1,13 +1,16 @@
+from domain.entity.product import ProductRead, ProductType
+
+
 class EntityNotFoundException(Exception):
     pass
 
 class ProductNotFoundException(EntityNotFoundException):
-    def __init__(self, product_id: int):
-        super().__init__(f"Product with id '{product_id}' not found")
+    def __init__(self, product_id: int, type: ProductType):
+        super().__init__(f"{type} with id '{product_id}' not found")
 
-class WheyNotFoundException(EntityNotFoundException):
+class WheyNotFoundException(ProductNotFoundException):
     def __init__(self, whey_id: int):
-        super().__init__(f"Whey with id '{whey_id}' not found")
+        super().__init__(whey_id, ProductType.WHEY)
 
 
 class BrandNotFoundException(EntityNotFoundException):

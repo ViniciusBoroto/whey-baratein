@@ -1,7 +1,7 @@
 import pytest
 from domain.entity.whey import WheyCreate
 from domain.entity.product import ProductType
-from domain.exception.exceptions import WheyNotFoundException
+from domain.exception.exceptions import ProductNotFoundException, WheyNotFoundException
 from infrastructure.persistence.sql_whey_repository_adapter import SqlWheyRepositoryAdapter
 
 
@@ -52,7 +52,7 @@ def test_get_whey_by_id(whey_repo, seed_brands, seed_users, whey_data):
 
 
 def test_get_nonexistent_whey_raises_exception(whey_repo):
-    with pytest.raises(WheyNotFoundException):
+    with pytest.raises(ProductNotFoundException):
         whey_repo.get_by_id(99999)
 
 
@@ -85,5 +85,5 @@ def test_delete_whey(whey_repo, seed_brands, seed_users, whey_data):
     
     whey_repo.delete(created_whey.id)
     
-    with pytest.raises(WheyNotFoundException):
+    with pytest.raises(ProductNotFoundException):
         whey_repo.get_by_id(created_whey.id)

@@ -20,4 +20,4 @@ class ProductRead(ProductCreate):
 
 
 class ProductDetails(ProductRead):
-    brand: Optional[Brand]
+    brand: Optional[Brand] = None
