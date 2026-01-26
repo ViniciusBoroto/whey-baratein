@@ -1,6 +1,6 @@
-from typing import Optional
+from typing import List, Optional
 from sqlalchemy import ForeignKey, Computed
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 from domain.entity import brand
 from domain.entity.user import UserRole
@@ -15,7 +15,19 @@ class UserORM(Base):
     name: Mapped[str]
     email: Mapped[str]
     password: Mapped[str]
-    role: Mapped[UserRole]
+    role: Mapped[UserRole] = mapped_column(default=UserRole.USER)
+
+    products: Mapped[List["ProductORM"]] = relationship(back_populates="owner")
+
+class BrandORM(Base):
+    __tablename__ = "brands"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    logo_url: Mapped[Optional[str]]
+    description: Mapped[Optional[str]]
+
+    products: Mapped[List["ProductORM"]] = relationship()
 
 class ProductORM(Base):
     __tablename__ = "products"
@@ -23,10 +35,14 @@ class ProductORM(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     price: Mapped[float]
-    brand_id: Mapped[int] = mapped_column(ForeignKey("brands.id"))
-    owner_id: Mapped[Optional[int]] = mapped_column(ForeignKey("users.id"))
     image_url: Mapped[Optional[str]]
     type: Mapped[str] 
+
+    brand_id: Mapped[int] = mapped_column(ForeignKey("brands.id"))
+    brand: Mapped["BrandORM"] = relationship(back_populates="products")
+
+    owner_id: Mapped[Optional[int]] = mapped_column(ForeignKey("users.id"))
+    owner: Mapped["UserORM"] = relationship(back_populates="products")
 
     __mapper_args__ = {
     "polymorphic_identity": "product",
@@ -52,9 +68,9 @@ class WheyORM(ProductORM):
     tryptophan_mg: Mapped[Optional[int]]
     valine_mg: Mapped[Optional[int]]
 
-    servings_per_packet: Mapped[float] = mapped_column(Computed("CASE WHEN serving_size = 0 THEN 0 ELSE CAST(total_weight AS FLOAT) / serving_size END"))
-    protein_concentration_pct: Mapped[float] = mapped_column(Computed("CASE WHEN serving_size = 0 THEN 0 ELSE (CAST(protein_per_serving AS FLOAT) / serving_size) * 100 END"))
-    eaa_price_per_g: Mapped[Optional[float]] = mapped_column(Computed("CASE WHEN (COALESCE(phenylalanine_mg, 0) + COALESCE(histidine_mg, 0) + COALESCE(isoleucine_mg, 0) + COALESCE(leucine_mg, 0) + COALESCE(lysine_mg, 0) + COALESCE(methionine_mg, 0) + COALESCE(threonine_mg, 0) + COALESCE(tryptophan_mg, 0) + COALESCE(valine_mg, 0)) * (CASE WHEN serving_size = 0 THEN 0 ELSE CAST(total_weight AS FLOAT) / serving_size END) / 1000.0 = 0 THEN NULL ELSE price / ((COALESCE(phenylalanine_mg, 0) + COALESCE(histidine_mg, 0) + COALESCE(isoleucine_mg, 0) + COALESCE(leucine_mg, 0) + COALESCE(lysine_mg, 0) + COALESCE(methionine_mg, 0) + COALESCE(threonine_mg, 0) + COALESCE(tryptophan_mg, 0) + COALESCE(valine_mg, 0)) * (CASE WHEN serving_size = 0 THEN 0 ELSE CAST(total_weight AS FLOAT) / serving_size END) / 1000.0) END"))
+    servings_per_packet: Mapped[float]
+    protein_concentration_pct: Mapped[float] 
+    eaa_price_per_g: Mapped[Optional[float]] 
 
     __mapper_args__ = {
     "polymorphic_identity": "whey",

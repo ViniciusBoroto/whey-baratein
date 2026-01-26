@@ -1,5 +1,5 @@
 from enum import Enum
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class UserRole(Enum):
     USER = "user"
@@ -11,8 +11,12 @@ class UserCreate(BaseModel):
     plain_password: str
     role: UserRole = UserRole.USER
 
+    model_config = ConfigDict(from_attributes=True)
+
 class UserRead(BaseModel):
     id: int
     name: str
     email: str
     role: UserRole = UserRole.USER
+
+    model_config = ConfigDict(from_attributes=True)

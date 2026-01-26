@@ -27,12 +27,12 @@ def test_create_whey_when_all_found(name, price, serving_size, total_weight, pro
     mock_brand_repo.get_brand_by_id.return_value = brand
 
     mock_whey_repo = Mock()
-    mock_whey_repo.create.return_value = WheyRead(**wheyCreate.__dict__, id="123")
+    mock_whey_repo.create.return_value = WheyRead(**wheyCreate.__dict__, id=123)
 
     uc = WheyUseCases(mock_brand_repo, mock_whey_repo)
     result = uc.create(wheyCreate)
     
-    assert result.id == "123"
+    assert result.id == 123
     assert result.name == name
     assert result.price == price
     assert result.brand == brand
@@ -45,7 +45,7 @@ def test_create_whey_brand_not_found():
     mock_brand_repo = Mock()
     mock_brand_repo.get_brand_by_id.side_effect = BrandNotFoundException(999)
     mock_whey_repo = Mock()
-    mock_whey_repo.create.return_value = WheyRead(**wheyCreate.__dict__, id="123")
+    mock_whey_repo.create.return_value = WheyRead(**wheyCreate.__dict__, id=123)
 
     uc = WheyUseCases(mock_brand_repo, mock_whey_repo)
     
@@ -54,7 +54,7 @@ def test_create_whey_brand_not_found():
 
 
 def test_get_whey():
-    whey = WheyRead(id="123", name="test", price=1, brand_id=1, serving_size=1, total_weight=1, protein_per_serving=1, owner_id=None)
+    whey = WheyRead(id=123, name="test", price=1, brand_id=1, serving_size=1, total_weight=1, protein_per_serving=1, owner_id=None)
     brand = Brand(id=1, name="brand", logo_url="logo_url", description="description")
     
     mock_brand_repo = Mock()
@@ -64,9 +64,9 @@ def test_get_whey():
     mock_whey_repo.get_by_id.return_value = whey
 
     uc = WheyUseCases(mock_brand_repo, mock_whey_repo)
-    result = uc.get_by_id("123")
+    result = uc.get_by_id(123)
     
-    assert result.id == "123"
+    assert result.id == 123
     assert result.name == "test"
     assert result.price == 1
     assert result.brand == brand
@@ -74,7 +74,7 @@ def test_get_whey():
 
 def test_get_whey_not_found():
     mock_whey_repo = Mock()
-    mock_whey_repo.get_by_id.side_effect = WheyNotFoundException("123")
+    mock_whey_repo.get_by_id.side_effect = WheyNotFoundException(123)
     mock_brand_repo = Mock()
 
     uc = WheyUseCases(mock_brand_repo, mock_whey_repo)
@@ -84,7 +84,7 @@ def test_get_whey_not_found():
 
 
 def test_get_whey_brand_not_found():
-    whey = WheyRead(id="123", name="test", price=1, brand_id=999, serving_size=1, total_weight=1, protein_per_serving=1, owner_id=None)
+    whey = WheyRead(id=123, name="test", price=1, brand_id=999, serving_size=1, total_weight=1, protein_per_serving=1, owner_id=None)
     
     mock_whey_repo = Mock()
     mock_whey_repo.get_by_id.return_value = whey

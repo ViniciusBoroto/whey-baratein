@@ -1,5 +1,5 @@
 import pytest
-from infrastructure.persistence.schemas.schemas import Base
+from infrastructure.persistence.schemas.schemas import Base, BrandORM, UserORM
 from testcontainers.postgres import PostgresContainer
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
@@ -46,3 +46,19 @@ def db_session(engine):
     session.close()
     transaction.rollback()
     connection.close()
+
+@pytest.fixture
+def seed_brands(db_session):
+    brands = [BrandORM(name="Brand 1"), BrandORM(name="Brand 2"), BrandORM(name="Brand 3")]
+    db_session.add_all(brands)
+    db_session.flush()
+    return brands
+
+@pytest.fixture
+def seed_users(db_session):
+    users = [UserORM(name="User 1", email="user1@example.com", password="pass1"),
+             UserORM(name="User 2", email="user2@example.com", password="pass2"),
+             UserORM(name="User 3", email="user3@example.com", password="pass3")]
+    db_session.add_all(users)
+    db_session.flush()
+    return users
