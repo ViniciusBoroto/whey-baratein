@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic, List
 
-from application.usecase.product_usecases import TDetails
-
 TCreate = TypeVar('TCreate')
 TRead = TypeVar('TRead')
 TDetails = TypeVar('TDetails')

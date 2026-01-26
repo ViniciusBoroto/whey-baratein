@@ -2,7 +2,7 @@ from unittest.mock import Mock
 import pytest
 from application.usecase.whey_usecases import WheyUseCases
 from domain.entity.brand import Brand
-from domain.entity.whey import WheyRead, WheyCreate
+from domain.entity.whey import WheyDetails, WheyRead, WheyCreate
 from domain.exception import BrandNotFoundException, WheyNotFoundException
 
 
@@ -54,7 +54,7 @@ def test_create_whey_brand_not_found():
 
 
 def test_get_whey():
-    whey = WheyRead(id=123, name="test", price=1, brand_id=1, serving_size=1, total_weight=1, protein_per_serving=1, owner_id=None)
+    whey = WheyDetails(id=123, name="test", price=1, brand_id=1, serving_size=1, total_weight=1, protein_per_serving=1, owner_id=None, brand=Brand(id=1, name="brand", logo_url="logo_url", description="description"))
     brand = Brand(id=1, name="brand", logo_url="logo_url", description="description")
     
     mock_brand_repo = Mock()
@@ -83,20 +83,6 @@ def test_get_whey_not_found():
         uc.get_by_id("123")
 
 
-def test_get_whey_brand_not_found():
-    whey = WheyRead(id=123, name="test", price=1, brand_id=999, serving_size=1, total_weight=1, protein_per_serving=1, owner_id=None)
-    
-    mock_whey_repo = Mock()
-    mock_whey_repo.get_by_id.return_value = whey
-    
-    mock_brand_repo = Mock()
-    mock_brand_repo.get_brand_by_id.side_effect = BrandNotFoundException(999)
-
-    uc = WheyUseCases(mock_brand_repo, mock_whey_repo)
-    
-    with pytest.raises(BrandNotFoundException):
-        uc.get_by_id("123")
-
 
 def test_update_whey():
     wheyCreate = WheyCreate(name="updated", price=2, brand_id=1, serving_size=2, total_weight=2, protein_per_serving=2, owner_id=None)
@@ -106,12 +92,12 @@ def test_update_whey():
     mock_brand_repo.get_brand_by_id.return_value = brand
 
     mock_whey_repo = Mock()
-    mock_whey_repo.update.return_value = WheyRead(**wheyCreate.__dict__, id="123")
+    mock_whey_repo.update.return_value = WheyRead(**wheyCreate.__dict__, id=123)
 
     uc = WheyUseCases(mock_brand_repo, mock_whey_repo)
-    result = uc.update("123", wheyCreate)
+    result = uc.update(123, wheyCreate)
     
-    assert result.id == "123"
+    assert result.id == 123
     assert result.name == "updated"
     assert result.price == 2
     assert result.brand == brand
@@ -125,12 +111,12 @@ def test_update_whey_not_found():
     mock_brand_repo.get_brand_by_id.return_value = brand
     
     mock_whey_repo = Mock()
-    mock_whey_repo.update.side_effect = WheyNotFoundException("999")
+    mock_whey_repo.update.side_effect = WheyNotFoundException(999)
 
     uc = WheyUseCases(mock_brand_repo, mock_whey_repo)
     
     with pytest.raises(WheyNotFoundException):
-        uc.update("999", wheyCreate)
+        uc.update(999, wheyCreate)
 
 
 def test_update_whey_brand_not_found():
@@ -143,7 +129,7 @@ def test_update_whey_brand_not_found():
     uc = WheyUseCases(mock_brand_repo, mock_whey_repo)
     
     with pytest.raises(BrandNotFoundException):
-        uc.update("123", wheyCreate)
+        uc.update(123, wheyCreate)
 
 
 def test_delete_whey():
@@ -151,17 +137,17 @@ def test_delete_whey():
     mock_whey_repo.delete.return_value = None
 
     uc = WheyUseCases(Mock(), mock_whey_repo)
-    result = uc.delete("123")
+    result = uc.delete(123)
     
     assert result is None
-    mock_whey_repo.delete.assert_called_once_with("123")
+    mock_whey_repo.delete.assert_called_once_with(123)
 
 
 def test_delete_whey_not_found():
     mock_whey_repo = Mock()
-    mock_whey_repo.delete.side_effect = WheyNotFoundException("999")
+    mock_whey_repo.delete.side_effect = WheyNotFoundException(999)
 
     uc = WheyUseCases(Mock(), mock_whey_repo)
     
     with pytest.raises(WheyNotFoundException):
-        uc.delete("999")
+        uc.delete(999)

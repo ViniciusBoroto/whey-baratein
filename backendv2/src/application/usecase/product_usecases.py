@@ -36,7 +36,7 @@ class ProductUseCases(Generic[TCreate, TRead, TDetails]):
     
     def get_by_id(self, product_id: int) -> TDetails:
         product = self._product_repo.get_by_id(product_id)
-        return self._details_class(brand=product.brand, **product.__dict__)
+        return self._details_class(**product.__dict__)
     
     def update(self, product_id: int, product: TCreate) -> TDetails:
         updated = self._product_repo.update(product_id, product)

@@ -6,5 +6,5 @@ from domain.port.whey_ports import WheyRepository
 
 class WheyUseCases(ProductUseCases[WheyCreate, WheyRead, WheyDetails]):
     def __init__(self, brand_repo: BrandRepository, whey_repo: WheyRepository):
-        super().__init__(whey_repo, brand_repo)
+        super().__init__(whey_repo, brand_repo, WheyDetails, WheyRead, WheyCreate)
 
