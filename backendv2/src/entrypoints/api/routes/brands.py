@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status
-from domain.entity.brand import Brand, BrandCreate
+from domain.entity.brand import Brand, BrandCreate, BrandRead
 from application.usecase.brand_usecases import BrandUseCases
 from entrypoints.api.dependencies import get_brand_usecases
 from entrypoints.api.middleware.auth import require_admin, CurrentUser
@@ -14,7 +14,7 @@ def create_brand(
 ):
     return usecases.create(brand)
 
-@router.get("/{brand_id}", response_model=Brand)
+@router.get("/{brand_id}", response_model=BrandRead)
 def get_brand(
     brand_id: int,
     usecases: BrandUseCases = Depends(get_brand_usecases)

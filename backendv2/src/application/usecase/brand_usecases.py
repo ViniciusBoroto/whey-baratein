@@ -1,4 +1,4 @@
-from domain.entity.brand import Brand, BrandCreate
+from domain.entity.brand import Brand, BrandCreate, BrandRead
 from domain.port.brand_repostory import BrandRepository
 
 
@@ -9,7 +9,7 @@ class BrandUseCases:
     def create(self, brand_create: BrandCreate) -> Brand:
         return self._brand_repo.create_brand(brand_create)
     
-    def get_by_id(self, brand_id: int) -> Brand:
+    def get_by_id(self, brand_id: int) -> BrandRead:
         return self._brand_repo.get_brand_by_id(brand_id)
     
     def update(self, brand_id: int, brand_create: BrandCreate) -> Brand:

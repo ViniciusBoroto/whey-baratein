@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from domain.entity.whey import WheyCreate, WheyDetails
+from domain.entity.whey import WheyCreate, WheyDetails, WheyRead
 from domain.entity.user import UserRole
 from application.usecase.whey_usecases import WheyUseCases
 from entrypoints.api.dependencies import get_whey_usecases
@@ -7,7 +7,7 @@ from entrypoints.api.middleware.auth import get_current_user, require_admin, Cur
 
 router = APIRouter()
 
-@router.post("", response_model=WheyDetails, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=WheyRead, status_code=status.HTTP_201_CREATED)
 def create_whey(
     whey: WheyCreate,
     current_user: CurrentUser = Depends(get_current_user),
@@ -30,7 +30,7 @@ def get_whey(
 ):
     return usecases.get_by_id(whey_id)
 
-@router.put("/{whey_id}", response_model=WheyDetails)
+@router.put("/{whey_id}", response_model=WheyRead)
 def update_whey(
     whey_id: int,
     whey: WheyCreate,

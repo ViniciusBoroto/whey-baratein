@@ -1,12 +1,13 @@
 from unittest.mock import Mock
 import pytest
 from application.usecase.brand_usecases import BrandUseCases
-from domain.entity.brand import Brand, BrandCreate
+from domain.entity.brand import Brand, BrandCreate, BrandRead
+from domain.entity.user import UserRead
 from domain.exception import BrandNotFoundException
 
 
 def test_create_brand():
-    brand_create = BrandCreate(name="brand", logo_url="logo_url", description="description")
+    brand_create = BrandCreate(name="brand", logo_url="logo_url", description="description", owner_id=1)
     brand = Brand(id=1, **brand_create.__dict__)
     
     mock_brand_repo = Mock()
@@ -34,10 +35,10 @@ def test_create_brand_duplicate_name():
 
 
 def test_get_brand():
-    brand = Brand(id=1, name="brand", logo_url="logo_url", description="description")
+    brand_read = BrandRead(id=1, name="brand", logo_url="logo_url", description="description", owner=UserRead(id=1, name="owner", email="owner@test.com"))
     
     mock_brand_repo = Mock()
-    mock_brand_repo.get_brand_by_id.return_value = brand
+    mock_brand_repo.get_brand_by_id.return_value = brand_read
 
     uc = BrandUseCases(mock_brand_repo)
     result = uc.get_by_id(1)
@@ -58,7 +59,7 @@ def test_get_brand_not_found():
 
 
 def test_update_brand():
-    brand_create = BrandCreate(name="updated", logo_url="new_logo", description="new_desc")
+    brand_create = BrandCreate(name="updated", logo_url="new_logo", description="new_desc", owner_id=1)
     updated_brand = Brand(id=1, **brand_create.__dict__)
     
     mock_brand_repo = Mock()
