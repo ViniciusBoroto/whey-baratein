@@ -2,12 +2,14 @@ from fastapi import APIRouter, Depends, status
 from domain.entity.brand import Brand, BrandCreate
 from application.usecase.brand_usecases import BrandUseCases
 from entrypoints.api.dependencies import get_brand_usecases
+from entrypoints.api.middleware.auth import require_admin, CurrentUser
 
 router = APIRouter()
 
 @router.post("", response_model=Brand, status_code=status.HTTP_201_CREATED)
 def create_brand(
     brand: BrandCreate,
+    _: CurrentUser = Depends(require_admin),
     usecases: BrandUseCases = Depends(get_brand_usecases)
 ):
     return usecases.create(brand)
@@ -23,6 +25,7 @@ def get_brand(
 def update_brand(
     brand_id: int,
     brand: BrandCreate,
+    _: CurrentUser = Depends(require_admin),
     usecases: BrandUseCases = Depends(get_brand_usecases)
 ):
     return usecases.update(brand_id, brand)
@@ -30,6 +33,7 @@ def update_brand(
 @router.delete("/{brand_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_brand(
     brand_id: int,
+    _: CurrentUser = Depends(require_admin),
     usecases: BrandUseCases = Depends(get_brand_usecases)
 ):
     usecases.delete(brand_id)

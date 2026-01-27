@@ -6,12 +6,27 @@ from domain.exception.exceptions import (
     BrandNotFoundException,
     ProductNotFoundException
 )
+from entrypoints.api.exceptions.auth_exceptions import UnauthorizedException, ForbiddenException
 
 def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(EntityNotFoundException)
     async def entity_not_found_handler(request: Request, exc: EntityNotFoundException):
         return JSONResponse(
             status_code=status.HTTP_404_NOT_FOUND,
+            content={"detail": str(exc)}
+        )
+    
+    @app.exception_handler(UnauthorizedException)
+    async def unauthorized_handler(request: Request, exc: UnauthorizedException):
+        return JSONResponse(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            content={"detail": str(exc)}
+        )
+    
+    @app.exception_handler(ForbiddenException)
+    async def forbidden_handler(request: Request, exc: ForbiddenException):
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
             content={"detail": str(exc)}
         )
     
