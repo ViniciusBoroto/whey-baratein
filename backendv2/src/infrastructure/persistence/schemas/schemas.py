@@ -18,6 +18,7 @@ class UserORM(Base):
     role: Mapped[UserRole] = mapped_column(default=UserRole.USER)
 
     products: Mapped[List["ProductORM"]] = relationship(back_populates="owner")
+    brands: Mapped[List["BrandORM"]] = relationship(back_populates="owner")
 
 class BrandORM(Base):
     __tablename__ = "brands"
@@ -26,6 +27,9 @@ class BrandORM(Base):
     name: Mapped[str]
     logo_url: Mapped[Optional[str]]
     description: Mapped[Optional[str]]
+
+    owner_id: Mapped[Optional[int]] = mapped_column(ForeignKey("users.id"))
+    owner: Mapped["UserORM"] = relationship(back_populates="brands")
 
     products: Mapped[List["ProductORM"]] = relationship()
 
