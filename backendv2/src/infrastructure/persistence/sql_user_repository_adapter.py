@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from domain.entity.user import UserRead, UserRole
-from domain.exception.exceptions import UserNotFoundException
+from domain.entity.user import UserRead, UserRole, UserWithPassword
+from domain.exception.exceptions import EntityNotFoundException, UserNotFoundException
 from domain.port.user_repository import UserRepository
 from infrastructure.persistence.schemas.schemas import UserORM
 
@@ -41,3 +41,9 @@ class SqlUserRepositoryAdapter(UserRepository):
             raise UserNotFoundException(user_id)
         self._session.delete(user)
         self._session.commit()
+
+    def get_by_email(self, email: str) -> UserWithPassword:
+        user = self._session.query(UserORM).filter_by(email=email).first()
+        if user is None:
+            raise EntityNotFoundException()
+        return UserWithPassword.model_validate(user)

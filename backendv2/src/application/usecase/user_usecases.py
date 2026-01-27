@@ -1,4 +1,6 @@
+from math import e
 from domain.entity.user import UserRead, UserCreate
+from domain.exception.exceptions import EntityNotFoundException, InvalidCredentialsException
 from domain.port.password_hasher import PasswordHasher
 from domain.port.user_repository import UserRepository
 
@@ -20,3 +22,14 @@ class UserUseCases:
     
     def delete(self, user_id: int) -> None:
         self._user_repo.delete(user_id)
+
+    def login(self, email: str, plain_password: str) -> UserRead:
+        try:
+            user = self._user_repo.get_by_email(email)
+        except EntityNotFoundException as e:
+            raise InvalidCredentialsException(e)
+        except: raise
+
+        if not self._password_hasher.verify(plain_password, user.password):
+            raise InvalidCredentialsException()
+        return user

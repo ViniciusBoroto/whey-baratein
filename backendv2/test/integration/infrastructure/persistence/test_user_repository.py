@@ -1,7 +1,7 @@
 
 import pytest
 from domain.entity.user import UserCreate, UserRole
-from domain.exception.exceptions import UserNotFoundException
+from domain.exception.exceptions import EntityNotFoundException, UserNotFoundException
 from infrastructure.persistence.sql_user_repository_adapter import SqlUserRepositoryAdapter
 
 
@@ -28,3 +28,15 @@ def test_crud_user(db_session):
     repo.delete(created_user.id)
     with pytest.raises(UserNotFoundException):
        repo.get_by_id(created_user.id) 
+
+def test_get_user_by_email(db_session):
+    repo = SqlUserRepositoryAdapter(db_session)
+
+    with pytest.raises(EntityNotFoundException):
+        repo.get_by_email("jdoe@example.com")
+
+    created_user = repo.create("jdoe", "jdoe@example.com", "hashed_password", UserRole.USER)
+    db_session.flush()
+
+    fetched_user = repo.get_by_email("jdoe@example.com")
+    assert fetched_user is not None

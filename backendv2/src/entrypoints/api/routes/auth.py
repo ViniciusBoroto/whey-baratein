@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from application.usecase.user_usecases import UserUseCases
+from domain.exception.exceptions import InvalidCredentialsException
 from domain.port.password_hasher import PasswordHasher
+from entrypoints.api.exceptions.auth_exceptions import UnauthorizedException
 from infrastructure.security.jwt_service import create_access_token
 from entrypoints.api.dependencies import get_user_usecases, get_password_hasher
 
@@ -19,10 +21,13 @@ class TokenResponse(BaseModel):
 def login(
     credentials: LoginRequest,
     user_usecases: UserUseCases = Depends(get_user_usecases),
-    password_hasher: PasswordHasher = Depends(get_password_hasher)
 ):
-    # TODO: Implement get_by_email in user repository
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Login requires get_by_email implementation in user repository"
+    try:
+        user = user_usecases.login(credentials.email, credentials.password)
+    except InvalidCredentialsException:
+        raise UnauthorizedException()
+    except: raise
+    return TokenResponse(
+        access_token=create_access_token(user.id, user.email, user.role),
     )
+

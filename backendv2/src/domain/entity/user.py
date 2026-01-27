@@ -20,3 +20,6 @@ class UserRead(BaseModel):
     role: UserRole = UserRole.USER
 
     model_config = ConfigDict(from_attributes=True)
+
+class UserWithPassword(UserRead):
+    password: str 

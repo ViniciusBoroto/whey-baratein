@@ -1,8 +1,9 @@
 from unittest.mock import Mock
 import pytest
 from application.usecase.user_usecases import UserUseCases
-from domain.entity.user import UserRead, UserCreate, UserRole
+from domain.entity.user import UserRead, UserCreate, UserRole, UserWithPassword
 from domain.exception import UserNotFoundException
+from domain.exception.exceptions import EntityNotFoundException, InvalidCredentialsException
 
 
 @pytest.mark.parametrize("role", [
@@ -107,3 +108,36 @@ def test_delete_user_not_found():
     
     with pytest.raises(UserNotFoundException):
         uc.delete(999)
+
+def test_login_success():
+    mock_user_repo = Mock()
+    mock_user_repo.get_by_email.return_value = UserWithPassword(id=1, name="name", email="email", role=UserRole.USER, password="hashed_password")
+
+    uc = UserUseCases(mock_user_repo, Mock())
+    result = uc.login("email", "password")
+    
+    assert result.id == 1
+
+def test_login_user_not_found():
+    mock_user_repo = Mock()
+    mock_user_repo.get_by_email.side_effect = EntityNotFoundException()
+
+    uc = UserUseCases(mock_user_repo, Mock())
+    
+    with pytest.raises(InvalidCredentialsException):
+        uc.login("email", "password")
+
+def test_login_user_wrong_password():
+    mock_user_repo = Mock()
+
+    mock_user_repo.get_by_email.return_value = UserWithPassword(id=1, name="name", email="email", role=UserRole.USER, password="hashed_password")
+
+    mock_password_hasher = Mock()
+    mock_password_hasher.verify.return_value = False
+
+    uc = UserUseCases(mock_user_repo, mock_password_hasher)
+    
+    with pytest.raises(InvalidCredentialsException):
+        uc.login("email", "password")
+
+

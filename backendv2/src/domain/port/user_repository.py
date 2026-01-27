@@ -1,7 +1,7 @@
 
 from abc import ABC, abstractmethod
 
-from domain.entity.user import UserRead, UserRole
+from domain.entity.user import UserRead, UserRole, UserWithPassword
 
 
 
@@ -21,3 +21,7 @@ class UserRepository(ABC):
     @abstractmethod
     def delete(self, user_id: int) -> None:
         raise NotImplementedError
+
+    @abstractmethod
+    def get_by_email(self, email: str) -> UserWithPassword:
+            raise NotImplementedError

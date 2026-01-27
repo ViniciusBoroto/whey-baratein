@@ -17,7 +17,9 @@ class BrandNotFoundException(EntityNotFoundException):
     def __init__(self, brand_id: int):
         super().__init__(f"Brand with id '{brand_id}' not found")
 
-
 class UserNotFoundException(EntityNotFoundException):
     def __init__(self, user_id: int):
         super().__init__(f"User with id '{user_id}' not found")
+
+class InvalidCredentialsException(Exception):
+    pass
