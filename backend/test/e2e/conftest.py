@@ -16,12 +16,12 @@ from infrastructure.security.bcrypt_password_hasher import BcryptPasswordHasher
 from infrastructure.security.jwt_service import create_access_token
 from domain.entity.user import UserRole
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="module")
 def postgres_container():
     with PostgresContainer("postgres:15-alpine") as postgres:
         yield postgres
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="module")
 def engine(postgres_container):
     db_url = postgres_container.get_connection_url()
     engine = create_engine(db_url)
@@ -29,7 +29,7 @@ def engine(postgres_container):
     yield engine
     engine.dispose()
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="module")
 def session_factory(engine):
     return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

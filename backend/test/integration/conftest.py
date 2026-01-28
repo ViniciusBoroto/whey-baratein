@@ -1,41 +1,26 @@
 import pytest
 from infrastructure.persistence.schemas.schemas import Base, BrandORM, UserORM
-from testcontainers.postgres import PostgresContainer
-from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker, Session
-# from src.models import Base  # Import your SQLAlchemy declarative base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-# 1. Spin up the Container (Function Scope = Runs for each test)
-@pytest.fixture(scope="function")
-def postgres_container():
-    with PostgresContainer("postgres:15-alpine") as postgres:
-        yield postgres
-
-# 2. Create the Engine (Function Scope)
-@pytest.fixture(scope="function")
-def engine(postgres_container):
-    db_url = postgres_container.get_connection_url()
-    engine = create_engine(db_url)
-    
-    # Create tables
+@pytest.fixture(scope="session")
+def engine():
+    engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
     Base.metadata.create_all(engine)
-        
     yield engine
-    
     engine.dispose()
 
-# 3. The Db Session (Function Scope = Runs for every test function)
 @pytest.fixture(scope="function")
 def db_session(engine):
-    """
-    Creates a new database session for a test.
-    """
-    SessionLocal = sessionmaker(bind=engine)
-    session = SessionLocal()
-
+    connection = engine.connect()
+    transaction = connection.begin()
+    session = sessionmaker(bind=connection)()
+    
     yield session
-
+    
     session.close()
+    transaction.rollback()
+    connection.close()
 
 @pytest.fixture
 def seed_brands(db_session):
