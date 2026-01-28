@@ -14,7 +14,7 @@ class SqlBrandRepositoryAdapter(BrandRepository):
         self._session = session
 
     def get_brand_by_id(self, brand_id: int) -> BrandRead:
-        stmt = select(BrandORM).join(BrandORM.owner).where(BrandORM.id == brand_id)
+        stmt = select(BrandORM).outerjoin(BrandORM.owner).where(BrandORM.id == brand_id)
         brand = self._session.execute(stmt).scalars().first()
         if brand is None:
             raise BrandNotFoundException(brand_id)
@@ -63,5 +63,5 @@ class SqlBrandRepositoryAdapter(BrandRepository):
     
     def _to_read(self, brand_orm: BrandORM) -> BrandRead:
         brand_dict = {k: v for k, v in brand_orm.__dict__.items() if not k.startswith('_') and k != 'owner'}
-        brand_dict['owner'] = UserRead(**{k: v for k, v in brand_orm.owner.__dict__.items() if not k.startswith('_')})
+        brand_dict['owner'] = UserRead(**{k: v for k, v in brand_orm.owner.__dict__.items() if not k.startswith('_')}) if brand_orm.owner else None
         return BrandRead(**brand_dict)

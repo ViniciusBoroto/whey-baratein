@@ -48,7 +48,7 @@ class GenericSqlProductRepositoryAdapter(Generic[TOrm,TCreate, TRead, TDetails])
         return self._to_read(product_orm)
     
     def get_by_id(self, product_id: int) -> TDetails:
-        stmt = select(self.orm_class).join(self.orm_class.brand).where(self.orm_class.id == product_id)
+        stmt = select(self.orm_class).outerjoin(self.orm_class.brand).outerjoin(self.orm_class.owner).where(self.orm_class.id == product_id)
         product = self._session.execute(stmt).scalars().first()
         if product is None:
             raise ProductNotFoundException(product_id, self.type)
@@ -83,12 +83,12 @@ class GenericSqlProductRepositoryAdapter(Generic[TOrm,TCreate, TRead, TDetails])
         self._session.commit()
     
     def list_by_owner(self, owner_id: int | None) -> List[TDetails]:
-        stmt = select(self.orm_class).join(self.orm_class.brand).where(self.orm_class.owner_id == owner_id)
+        stmt = select(self.orm_class).outerjoin(self.orm_class.brand).where(self.orm_class.owner_id == owner_id)
         products = self._session.execute(stmt).scalars().all()
         return [self._to_details(product) for product in products]
     
     def list_all(self, offset: int, limit: int) -> List[TDetails]:
-        stmt = select(self.orm_class).join(self.orm_class.brand).offset(offset).limit(limit)
+        stmt = select(self.orm_class).outerjoin(self.orm_class.brand).offset(offset).limit(limit)
         products = self._session.execute(stmt).scalars().all()
         return [self._to_details(product) for product in products]
 
