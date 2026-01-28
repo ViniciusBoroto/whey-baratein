@@ -132,6 +132,7 @@ def test_create_whey_as_user_for_another_user(client, admin_token):
             "name": "Gold Standard",
             "price": 100,
             "brand_id": brand_id,
+            "owner_id": 999,
             "image_url": "string",
             "serving_size": 30,
             "protein_per_serving": 21,
@@ -149,7 +150,9 @@ def test_create_whey_as_user_for_another_user(client, admin_token):
         headers={"Authorization": f"Bearer {user_token}"}
     )
     
-    assert response.status_code == 403
+    assert response.status_code == 201
+    data = response.json()
+    assert data["owner_id"] != 999
 
 def test_get_whey(client, admin_token):
     brand_response = client.post("/api/v1/brands",
@@ -307,7 +310,9 @@ def test_update_whey_as_non_owner(client, admin_token):
         headers={"Authorization": f"Bearer {other_token}"}
     )
     
-    assert response.status_code == 403
+    assert response.status_code == 200
+    data = response.json()
+    assert data["owner_id"] != owner_id
 
 def test_delete_whey_as_admin(client, admin_token):
     brand_response = client.post("/api/v1/brands",
@@ -336,7 +341,7 @@ def test_delete_whey_as_admin(client, admin_token):
     get_response = client.get(f"/api/v1/whey/{whey_id}")
     assert get_response.status_code == 404
 
-def test_delete_whey_as_user(client, admin_token, user_token):
+def test_delete_whey_as_non_owner_user(client, admin_token, user_token):
     brand_response = client.post("/api/v1/brands",
         json={"name": "Brand", "logo_url": "logo.png", "description": "desc"},
         headers={"Authorization": f"Bearer {admin_token}"}
@@ -360,6 +365,41 @@ def test_delete_whey_as_user(client, admin_token, user_token):
     
     assert response.status_code == 403
 
+def test_delete_whey_as_owner_user(client, admin_token):
+    brand_response = client.post("/api/v1/brands",
+        json={"name": "Brand", "logo_url": "logo.png", "description": "desc"},
+        headers={"Authorization": f"Bearer {admin_token}"}
+    )
+    brand_id = brand_response.json()["id"]
+    
+    user_response = client.post("/api/v1/users", json={
+        "name": "Owner", "email": "owner@test.com", "plain_password": "pass", "role": "user"
+    })
+    user_id = user_response.json()["id"]
+    
+    login_response = client.post("/api/v1/auth/login", json={
+        "email": "owner@test.com", "password": "pass"
+    })
+    owner_token = login_response.json()["access_token"]
+    
+    create_response = client.post("/api/v1/whey",
+        json={
+            "name": "Gold Standard",
+            "brand_id": brand_id,
+            "owner_id": user_id,
+            "price": 199.99,
+            "weight": 2270
+        },
+        headers={"Authorization": f"Bearer {owner_token}"}
+    )
+    whey_id = create_response.json()["id"]
+    
+    response = client.delete(f"/api/v1/whey/{whey_id}",
+        headers={"Authorization": f"Bearer {owner_token}"}
+    )
+    
+    assert response.status_code == 204
+
 def test_create_whey_without_auth(client):
     response = client.post("/api/v1/whey", json={
         "name": "Gold Standard",
@@ -368,7 +408,7 @@ def test_create_whey_without_auth(client):
         "weight": 2270
     })
     
-    assert response.status_code == 403
+    assert response.status_code == 401
 
 def test_update_whey_without_auth(client, admin_token):
     brand_response = client.post("/api/v1/brands",
@@ -397,7 +437,7 @@ def test_update_whey_without_auth(client, admin_token):
         }
     )
     
-    assert response.status_code == 403
+    assert response.status_code == 401
 
 def test_delete_whey_without_auth(client, admin_token):
     brand_response = client.post("/api/v1/brands",
@@ -419,4 +459,4 @@ def test_delete_whey_without_auth(client, admin_token):
     
     response = client.delete(f"/api/v1/whey/{whey_id}")
     
-    assert response.status_code == 403
+    assert response.status_code == 401

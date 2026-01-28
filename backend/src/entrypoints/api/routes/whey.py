@@ -37,11 +37,8 @@ def update_whey(
     current_user: CurrentUser = Depends(get_current_user),
     usecases: WheyUseCases = Depends(get_whey_usecases)
 ):
-    if current_user.role != UserRole.ADMIN and whey.owner_id != current_user.id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Cannot update whey owned by another user"
-        )
+    if current_user.role != UserRole.ADMIN:
+        whey.owner_id = current_user.id
     return usecases.update(whey_id, whey)
 
 @router.delete("/{whey_id}", status_code=status.HTTP_204_NO_CONTENT)

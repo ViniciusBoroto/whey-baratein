@@ -33,8 +33,24 @@ def engine(postgres_container):
 def session_factory(engine):
     return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+@pytest.fixture(scope="module")
+def base_users(session_factory):
+    session = session_factory()
+    from infrastructure.persistence.schemas.schemas import UserORM
+    from infrastructure.security.bcrypt_password_hasher import BcryptPasswordHasher
+    hasher = BcryptPasswordHasher()
+    
+    admin = UserORM(id=1, name="Admin", email="admin@test.com", password=hasher.hash("admin"), role=UserRole.ADMIN)
+    user = UserORM(id=2, name="User", email="user@test.com", password=hasher.hash("user"), role=UserRole.USER)
+    
+    session.add(admin)
+    session.add(user)
+    session.commit()
+    session.close()
+    return {"admin_id": 1, "user_id": 2}
+
 @pytest.fixture(scope="function")
-def client(session_factory):
+def client(session_factory, base_users):
     app = create_app()
     
     def override_user_usecases():
@@ -58,5 +74,14 @@ def admin_token():
     return create_access_token(1, "admin@test.com", UserRole.ADMIN)
 
 @pytest.fixture
+def admin_id():
+    return 1 
+
+@pytest.fixture
 def user_token():
     return create_access_token(2, "user@test.com", UserRole.USER)
+
+@pytest.fixture
+def user_id():
+    return 2
+
