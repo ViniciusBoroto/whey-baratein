@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { DarkModeButton } from "./components/DarkModeButton";
 import logo from "./../public/whey-baratein.png";
@@ -12,6 +12,16 @@ import { CreateWheyProteinModal } from "./components/CreateWheyProteinModal";
 function AppContent() {
   const [isCreating, setIsCreating] = useState(false);
   const { isAuthenticated, logout } = useAuth();
+  const location = useLocation();
+  const isAuthPage = location.pathname === "/auth";
+
+  if (isAuthPage) {
+    return (
+      <Routes>
+        <Route path="/auth" element={isAuthenticated ? <Navigate to="/" /> : <AuthPage />} />
+      </Routes>
+    );
+  }
 
   return (
     <>
@@ -50,7 +60,6 @@ function AppContent() {
       <main className="p-10">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/auth" element={isAuthenticated ? <Navigate to="/" /> : <AuthPage />} />
         </Routes>
       </main>
       <footer>Footer</footer>

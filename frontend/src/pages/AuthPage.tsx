@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { userService } from "../services/user.service";
 import { Input } from "../components/Input";
 import { PrimaryButton } from "../components/PrimaryButton";
+import logo from "./../../public/whey-baratein.png";
 
 export const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -34,18 +35,18 @@ export const AuthPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface">
       <div className="bg-neutral-primary p-8 rounded-lg border border-border-medium w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Whey Baratein</h1>
-        
+        <h1 className="flex items-center justify-center w-full h-50 -mt-8"><img className="h-full " src={logo} alt="" /></h1>
+
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setIsLogin(true)}
-            className={`flex-1 py-2 rounded ${isLogin ? "bg-primary text-white" : "bg-surface"}`}
+            className={`flex-1 py-2 rounded ${isLogin ? "bg-primary text-white border-b border-border" : "bg-surface"}`}
           >
             Login
           </button>
           <button
             onClick={() => setIsLogin(false)}
-            className={`flex-1 py-2 rounded ${!isLogin ? "bg-primary text-white" : "bg-surface"}`}
+            className={`flex-1 py-2 rounded ${!isLogin ? "bg-primary text-white border-b border-border" : "bg-surface"}`}
           >
             Register
           </button>
@@ -54,6 +55,7 @@ export const AuthPage = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <Input
+              id="name"
               label="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -61,6 +63,7 @@ export const AuthPage = () => {
             />
           )}
           <Input
+            id="email"
             label="Email"
             type="email"
             value={email}
@@ -68,6 +71,7 @@ export const AuthPage = () => {
             required
           />
           <Input
+            id="password"
             label="Password"
             type="password"
             value={password}
