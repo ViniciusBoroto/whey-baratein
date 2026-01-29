@@ -22,28 +22,28 @@ export class WheyProteinService implements WheyProteinRepository {
   }
 
   async getAll(): Promise<WheyProtein[]> {
-    return this.apiClient.get<WheyProtein[]>("/whey-proteins/");
+    return this.apiClient.get<WheyProtein[]>("/whey");
   }
 
   async getById(id: number): Promise<WheyProtein> {
-    return this.apiClient.get<WheyProtein>(`/whey-proteins/${id}`);
+    return this.apiClient.get<WheyProtein>(`/whey/${id}`);
   }
 
   async create(data: WheyProteinCreate): Promise<WheyProtein> {
-    return this.apiClient.post<WheyProtein>("/whey-proteins/", data);
+    return this.apiClient.post<WheyProtein>("/whey", data);
   }
 
   async update(id: number, data: WheyProteinCreate): Promise<WheyProtein> {
-    return this.apiClient.put<WheyProtein>(`/whey-proteins/${id}`, data);
+    return this.apiClient.put<WheyProtein>(`/whey/${id}`, data);
   }
 
   async delete(id: number): Promise<void> {
-    return this.apiClient.delete(`/whey-proteins/${id}`);
+    return this.apiClient.delete(`/whey/${id}`);
   }
 
   async getRanking(type: RankingType): Promise<WheyProteinRanking[]> {
     return this.apiClient.get<WheyProteinRanking[]>(
-      `/whey-proteins/rankings/${type}`
+      `/whey/rankings/${type}`
     );
   }
 }
