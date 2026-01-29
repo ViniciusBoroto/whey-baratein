@@ -1,23 +1,26 @@
 import "./App.css";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { DarkModeButton } from "./components/DarkModeButton";
 import logo from "./../public/whey-baratein.png";
 import { HomePage } from "./pages/HomePage";
+import { AuthPage } from "./pages/AuthPage";
 import { PrimaryButton } from "./components/PrimaryButton";
 import { useState } from "react";
 import { CreateWheyProteinModal } from "./components/CreateWheyProteinModal";
 
-function App() {
+function AppContent() {
   const [isCreating, setIsCreating] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
+
   return (
     <>
       <CreateWheyProteinModal
         isOpen={isCreating}
         onClose={() => setIsCreating(false)}
-      ></CreateWheyProteinModal>
+      />
       <header className="sticky top-0 z-40 flex-none w-full mx-auto bg-neutral-primary border-b border-border-medium">
-        {/* Top Bar */}
         <div className="flex items-center justify-between w-full px-3 py-3 mx-auto bg-surface">
-          {/* Left part of top bar */}
           <div className="flex items-center max-h-14 max-w-40 overflow-hidden">
             <a className="w-max h-max text-shadow-2xl overflow-hidden cursor-pointer">
               <img
@@ -28,18 +31,40 @@ function App() {
             </a>
           </div>
           <div className="h-auto flex items-center gap-3">
-            <DarkModeButton></DarkModeButton>
-            <PrimaryButton onClick={() => setIsCreating(true)}>
-              + Adicionar
-            </PrimaryButton>
+            <DarkModeButton />
+            {isAuthenticated ? (
+              <>
+                <PrimaryButton onClick={() => setIsCreating(true)}>
+                  + Adicionar
+                </PrimaryButton>
+                <PrimaryButton onClick={logout}>Logout</PrimaryButton>
+              </>
+            ) : (
+              <PrimaryButton onClick={() => window.location.href = "/auth"}>
+                Login / Signup
+              </PrimaryButton>
+            )}
           </div>
         </div>
       </header>
       <main className="p-10">
-        <HomePage></HomePage>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/auth" element={isAuthenticated ? <Navigate to="/" /> : <AuthPage />} />
+        </Routes>
       </main>
       <footer>Footer</footer>
     </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
