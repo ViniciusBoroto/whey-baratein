@@ -37,31 +37,32 @@ export const AuthPage = () => {
       <div className="bg-neutral-primary p-8 rounded-lg border border-border-medium w-full max-w-md">
         <h1 className="flex items-center justify-center w-full h-50 -mt-8"><img className="h-full " src={logo} alt="" /></h1>
 
-        <div className="flex gap-2 mb-6">
+        <div className="relative flex gap-2 mb-6">
           <button
             onClick={() => setIsLogin(true)}
-            className={`flex-1 py-2 rounded ${isLogin ? "bg-primary text-white border-b border-border" : "bg-surface"}`}
+            className={`flex-1 py-2 rounded transition-all duration-300 ${isLogin ? "bg-primary text-white" : "bg-surface"}`}
           >
             Login
           </button>
           <button
             onClick={() => setIsLogin(false)}
-            className={`flex-1 py-2 rounded ${!isLogin ? "bg-primary text-white border-b border-border" : "bg-surface"}`}
+            className={`flex-1 py-2 rounded transition-all duration-300 ${!isLogin ? "bg-primary text-white" : "bg-surface"}`}
           >
             Register
           </button>
+          <div className={`absolute bottom-0 h-0.5 bg-border transition-all duration-300 ${isLogin ? "left-0 w-[calc(50%-0.25rem)]" : "left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]"}`} />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {!isLogin && (
+          <div className={`transition-all duration-300 overflow-hidden ${!isLogin ? "max-h-20 opacity-100" : "max-h-0 opacity-0"}`}>
             <Input
               id="name"
               label="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
+              required={!isLogin}
             />
-          )}
+          </div>
           <Input
             id="email"
             label="Email"
