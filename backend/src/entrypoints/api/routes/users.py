@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, status
 from domain.entity.user import UserCreate, UserRead
 from application.usecase.user_usecases import UserUseCases
 from entrypoints.api.dependencies import get_user_usecases
+from entrypoints.api.middleware.auth import require_admin, CurrentUser
 
 router = APIRouter()
 
@@ -22,6 +23,7 @@ def get_user(
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(
     user_id: int,
+    _: CurrentUser = Depends(require_admin),
     usecases: UserUseCases = Depends(get_user_usecases)
 ):
     usecases.delete(user_id)

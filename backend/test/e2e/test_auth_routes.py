@@ -28,14 +28,14 @@ def test_login_invalid_credentials(client):
 
 def test_login_wrong_password(client):
     client.post("/api/v1/users", json={
-        "name": "Test User",
-        "email": "test@example.com",
+        "name": "Test User Wrong",
+        "email": "testwrong@example.com",
         "plain_password": "password123",
         "role": "user"
     })
     
     response = client.post("/api/v1/auth/login", json={
-        "email": "test@example.com",
+        "email": "testwrong@example.com",
         "password": "wrongpassword"
     })
     

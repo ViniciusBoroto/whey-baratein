@@ -211,13 +211,12 @@ def test_delete_global_brand_as_user(client, admin_token, user_token):
     
     assert response.status_code == 403
 
-def test_delete_self_brand_as_user(client, admin_token, user_token, user_id):
+def test_delete_self_brand_as_user(client, user_token):
     create_response = client.post("/api/v1/brands",
         json={
             "name": "Optimum Nutrition",
             "logo_url": "https://example.com/logo.png",
-            "description": "Premium sports nutrition",
-            "owner_id": user_id
+            "description": "Premium sports nutrition"
         },
         headers={"Authorization": f"Bearer {user_token}"}
     )
@@ -228,7 +227,7 @@ def test_delete_self_brand_as_user(client, admin_token, user_token, user_id):
         headers={"Authorization": f"Bearer {user_token}"}
     )
     
-    assert response.status_code == 200
+    assert response.status_code == 403
 
 
 

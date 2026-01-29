@@ -13,7 +13,7 @@ class UserORM(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
-    email: Mapped[str]
+    email: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
     role: Mapped[UserRole] = mapped_column(default=UserRole.USER)
 

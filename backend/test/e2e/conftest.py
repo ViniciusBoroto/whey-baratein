@@ -34,10 +34,11 @@ def session_factory(engine):
     return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 @pytest.fixture(scope="module")
-def base_users(session_factory):
+def base_users(session_factory, engine):
     session = session_factory()
     from infrastructure.persistence.schemas.schemas import UserORM
     from infrastructure.security.bcrypt_password_hasher import BcryptPasswordHasher
+    from sqlalchemy import text
     hasher = BcryptPasswordHasher()
     
     admin = UserORM(id=1, name="Admin", email="admin@test.com", password=hasher.hash("admin"), role=UserRole.ADMIN)
@@ -46,6 +47,11 @@ def base_users(session_factory):
     session.add(admin)
     session.add(user)
     session.commit()
+    
+    # Reset sequence to start from 3
+    session.execute(text("SELECT setval('users_id_seq', 2, true)"))
+    session.commit()
+    
     session.close()
     return {"admin_id": 1, "user_id": 2}
 

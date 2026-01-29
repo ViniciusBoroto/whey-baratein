@@ -14,13 +14,7 @@ def create_whey(
     usecases: WheyUseCases = Depends(get_whey_usecases)
 ):
     if current_user.role != UserRole.ADMIN:
-        if whey.owner_id is None:
-            whey.owner_id = current_user.id
-        elif whey.owner_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Cannot create whey for another user"
-            )
+        whey.owner_id = current_user.id
     return usecases.create(whey)
 
 @router.get("/{whey_id}", response_model=WheyDetails)

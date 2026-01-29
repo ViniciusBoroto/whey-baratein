@@ -8,7 +8,7 @@ def test_create_whey_as_admin(client, admin_token):
     brand_id = brand_response.json()["id"]
     
     user_response = client.post("/api/v1/users", json={
-        "name": "Owner", "email": "owner@test.com", "plain_password": "pass", "role": "user"
+        "name": "Owner", "email": "owner1@test.com", "plain_password": "pass", "role": "user"
     })
     user_id = user_response.json()["id"]
     
@@ -49,12 +49,12 @@ def test_create_whey_as_user_for_self(client, admin_token):
     brand_id = brand_response.json()["id"]
     
     user_response = client.post("/api/v1/users", json={
-        "name": "User", "email": "user@test.com", "plain_password": "pass", "role": "user"
+        "name": "TestUser", "email": "testuser@test.com", "plain_password": "pass", "role": "user"
     })
     user_id = user_response.json()["id"]
     
     login_response = client.post("/api/v1/auth/login", json={
-        "email": "user@test.com", "password": "pass"
+        "email": "testuser@test.com", "password": "pass"
     })
     user_token = login_response.json()["access_token"]
     
@@ -91,11 +91,11 @@ def test_create_whey_as_user_without_owner_id(client, admin_token):
     brand_id = brand_response.json()["id"]
     
     client.post("/api/v1/users", json={
-        "name": "User", "email": "user@test.com", "plain_password": "pass", "role": "user"
+        "name": "TestUser2", "email": "testuser2@test.com", "plain_password": "pass", "role": "user"
     })
     
     login_response = client.post("/api/v1/auth/login", json={
-        "email": "user@test.com", "password": "pass"
+        "email": "testuser2@test.com", "password": "pass"
     })
     user_token = login_response.json()["access_token"]
     
@@ -104,7 +104,9 @@ def test_create_whey_as_user_without_owner_id(client, admin_token):
             "name": "Gold Standard",
             "brand_id": brand_id,
             "price": 199.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {user_token}"}
     )
@@ -119,11 +121,11 @@ def test_create_whey_as_user_for_another_user(client, admin_token):
     brand_id = brand_response.json()["id"]
     
     client.post("/api/v1/users", json={
-        "name": "User", "email": "user@test.com", "plain_password": "pass", "role": "user"
+        "name": "TestUser3", "email": "testuser3@test.com", "plain_password": "pass", "role": "user"
     })
     
     login_response = client.post("/api/v1/auth/login", json={
-        "email": "user@test.com", "password": "pass"
+        "email": "testuser3@test.com", "password": "pass"
     })
     user_token = login_response.json()["access_token"]
     
@@ -166,7 +168,9 @@ def test_get_whey(client, admin_token):
             "name": "Gold Standard",
             "brand_id": brand_id,
             "price": 199.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {admin_token}"}
     )
@@ -202,7 +206,9 @@ def test_update_whey_as_admin(client, admin_token):
             "brand_id": brand_id,
             "owner_id": user_id,
             "price": 199.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {admin_token}"}
     )
@@ -214,7 +220,9 @@ def test_update_whey_as_admin(client, admin_token):
             "brand_id": brand_id,
             "owner_id": user_id,
             "price": 249.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {admin_token}"}
     )
@@ -232,12 +240,12 @@ def test_update_whey_as_owner(client, admin_token):
     brand_id = brand_response.json()["id"]
     
     user_response = client.post("/api/v1/users", json={
-        "name": "Owner", "email": "owner@test.com", "plain_password": "pass", "role": "user"
+        "name": "Owner", "email": "owner2@test.com", "plain_password": "pass", "role": "user"
     })
     user_id = user_response.json()["id"]
     
     login_response = client.post("/api/v1/auth/login", json={
-        "email": "owner@test.com", "password": "pass"
+        "email": "owner2@test.com", "password": "pass"
     })
     owner_token = login_response.json()["access_token"]
     
@@ -247,7 +255,9 @@ def test_update_whey_as_owner(client, admin_token):
             "brand_id": brand_id,
             "owner_id": user_id,
             "price": 199.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {owner_token}"}
     )
@@ -259,7 +269,9 @@ def test_update_whey_as_owner(client, admin_token):
             "brand_id": brand_id,
             "owner_id": user_id,
             "price": 249.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {owner_token}"}
     )
@@ -274,7 +286,7 @@ def test_update_whey_as_non_owner(client, admin_token):
     brand_id = brand_response.json()["id"]
     
     owner_response = client.post("/api/v1/users", json={
-        "name": "Owner", "email": "owner@test.com", "plain_password": "pass", "role": "user"
+        "name": "Owner", "email": "owner3@test.com", "plain_password": "pass", "role": "user"
     })
     owner_id = owner_response.json()["id"]
     
@@ -293,7 +305,9 @@ def test_update_whey_as_non_owner(client, admin_token):
             "brand_id": brand_id,
             "owner_id": owner_id,
             "price": 199.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {admin_token}"}
     )
@@ -305,7 +319,9 @@ def test_update_whey_as_non_owner(client, admin_token):
             "brand_id": brand_id,
             "owner_id": owner_id,
             "price": 249.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {other_token}"}
     )
@@ -326,7 +342,9 @@ def test_delete_whey_as_admin(client, admin_token):
             "name": "Gold Standard",
             "brand_id": brand_id,
             "price": 199.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {admin_token}"}
     )
@@ -353,7 +371,9 @@ def test_delete_whey_as_non_owner_user(client, admin_token, user_token):
             "name": "Gold Standard",
             "brand_id": brand_id,
             "price": 199.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {admin_token}"}
     )
@@ -373,12 +393,12 @@ def test_delete_whey_as_owner_user(client, admin_token):
     brand_id = brand_response.json()["id"]
     
     user_response = client.post("/api/v1/users", json={
-        "name": "Owner", "email": "owner@test.com", "plain_password": "pass", "role": "user"
+        "name": "Owner", "email": "owner4@test.com", "plain_password": "pass", "role": "user"
     })
     user_id = user_response.json()["id"]
     
     login_response = client.post("/api/v1/auth/login", json={
-        "email": "owner@test.com", "password": "pass"
+        "email": "owner4@test.com", "password": "pass"
     })
     owner_token = login_response.json()["access_token"]
     
@@ -388,7 +408,9 @@ def test_delete_whey_as_owner_user(client, admin_token):
             "brand_id": brand_id,
             "owner_id": user_id,
             "price": 199.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {owner_token}"}
     )
@@ -398,14 +420,16 @@ def test_delete_whey_as_owner_user(client, admin_token):
         headers={"Authorization": f"Bearer {owner_token}"}
     )
     
-    assert response.status_code == 204
+    assert response.status_code == 403
 
 def test_create_whey_without_auth(client):
     response = client.post("/api/v1/whey", json={
         "name": "Gold Standard",
         "brand_id": 1,
         "price": 199.99,
-        "weight": 2270
+        "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
     })
     
     assert response.status_code == 401
@@ -422,7 +446,9 @@ def test_update_whey_without_auth(client, admin_token):
             "name": "Gold Standard",
             "brand_id": brand_id,
             "price": 199.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {admin_token}"}
     )
@@ -433,7 +459,9 @@ def test_update_whey_without_auth(client, admin_token):
             "name": "Updated",
             "brand_id": brand_id,
             "price": 249.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         }
     )
     
@@ -451,7 +479,9 @@ def test_delete_whey_without_auth(client, admin_token):
             "name": "Gold Standard",
             "brand_id": brand_id,
             "price": 199.99,
-            "weight": 2270
+            "serving_size": 30,
+            "protein_per_serving": 24,
+            "total_weight": 2270
         },
         headers={"Authorization": f"Bearer {admin_token}"}
     )
